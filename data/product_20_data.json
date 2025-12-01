@@ -1,0 +1,262 @@
+[
+  {
+    "product_id": 1,
+    "name": "Redmi Note 13 5G",
+    "category": "Mobile",
+    "description": "6.67-inch AMOLED display, 5G support, 108MP camera",
+    "price": 15999,
+    "brand": "Xiaomi",
+    "rating": 4.3,
+    "stock": 34,
+    "images": [
+      "https://m.media-amazon.com/images/I/71VW8LmqqPL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 2,
+    "name": "Samsung Galaxy M34",
+    "category": "Mobile",
+    "description": "Super AMOLED 120Hz display, 6000mAh battery",
+    "price": 16999,
+    "brand": "Samsung",
+    "rating": 4.4,
+    "stock": 21,
+    "images": [
+      "https://m.media-amazon.com/images/I/81Bn0D8OLeL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 3,
+    "name": "HP 15s Laptop (i5 12th Gen)",
+    "category": "Laptop",
+    "description": "15.6-inch FHD, 8GB RAM, 512GB SSD, Windows 11",
+    "price": 47999,
+    "brand": "HP",
+    "rating": 4.2,
+    "stock": 12,
+    "images": [
+      "https://m.media-amazon.com/images/I/71-7NQ-M8-L._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 4,
+    "name": "Lenovo IdeaPad Slim 3",
+    "category": "Laptop",
+    "description": "Ryzen 5, 15.6-inch FHD, 8GB RAM, 512GB SSD",
+    "price": 42999,
+    "brand": "Lenovo",
+    "rating": 4.1,
+    "stock": 15,
+    "images": [
+      "https://m.media-amazon.com/images/I/71f5Eu5lJSL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 5,
+    "name": "Sony WH-CH520 Wireless Headphones",
+    "category": "Audio",
+    "description": "Bluetooth, 50 hours battery life, lightweight design",
+    "price": 2499,
+    "brand": "Sony",
+    "rating": 4.5,
+    "stock": 40,
+    "images": [
+      "https://m.media-amazon.com/images/I/61Nw1fLr8xL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 6,
+    "name": "JBL Tune 510BT",
+    "category": "Audio",
+    "description": "Pure Bass wireless headphones with quick charging",
+    "price": 2999,
+    "brand": "JBL",
+    "rating": 4.4,
+    "stock": 28,
+    "images": [
+      "https://m.media-amazon.com/images/I/61x7aZxZcCL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 7,
+    "name": "Boat Airdopes 141",
+    "category": "Audio",
+    "description": "42 hours playback, ENx noise cancellation",
+    "price": 899,
+    "brand": "Boat",
+    "rating": 4.2,
+    "stock": 60,
+    "images": [
+      "https://m.media-amazon.com/images/I/61KNJav3S9L._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 8,
+    "name": "Apple iPad 10th Gen",
+    "category": "Tablet",
+    "description": "10.9-inch Liquid Retina display, A14 Bionic chip",
+    "price": 34999,
+    "brand": "Apple",
+    "rating": 4.7,
+    "stock": 8,
+    "images": [
+      "https://m.media-amazon.com/images/I/61NGnpjoRDL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 9,
+    "name": "Samsung Galaxy Tab A9+",
+    "category": "Tablet",
+    "description": "11-inch display, Snapdragon chipset",
+    "price": 22999,
+    "brand": "Samsung",
+    "rating": 4.3,
+    "stock": 14,
+    "images": [
+      "https://m.media-amazon.com/images/I/71L4j4RHrJL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 10,
+    "name": "Nike Air Max Shoes",
+    "category": "Fashion",
+    "description": "Comfortable lightweight running shoes",
+    "price": 6999,
+    "brand": "Nike",
+    "rating": 4.4,
+    "stock": 22,
+    "images": [
+      "https://m.media-amazon.com/images/I/71EcgfH0c0L._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 11,
+    "name": "Puma Men's Running Shoes",
+    "category": "Fashion",
+    "description": "Breathable sports shoes with EVA midsole",
+    "price": 3499,
+    "brand": "Puma",
+    "rating": 4.3,
+    "stock": 30,
+    "images": [
+      "https://m.media-amazon.com/images/I/61N0k1xNVFL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 12,
+    "name": "Allen Solly Men's Shirt",
+    "category": "Fashion",
+    "description": "Slim fit casual cotton shirt",
+    "price": 1899,
+    "brand": "Allen Solly",
+    "rating": 4.1,
+    "stock": 25,
+    "images": [
+      "https://m.media-amazon.com/images/I/71u7FxoQUwL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 13,
+    "name": "Sony Bravia 43-inch Smart TV",
+    "category": "Electronics",
+    "description": "4K Ultra HD LED TV with Google TV",
+    "price": 38999,
+    "brand": "Sony",
+    "rating": 4.6,
+    "stock": 9,
+    "images": [
+      "https://m.media-amazon.com/images/I/81QpkIctqPL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 14,
+    "name": "Mi 40-inch Smart TV",
+    "category": "Electronics",
+    "description": "Full HD Android TV with PatchWall",
+    "price": 22999,
+    "brand": "Xiaomi",
+    "rating": 4.3,
+    "stock": 12,
+    "images": [
+      "https://m.media-amazon.com/images/I/81s0B6NYXML._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 15,
+    "name": "LG 7kg Washing Machine",
+    "category": "Appliances",
+    "description": "Fully automatic front load with inverter technology",
+    "price": 22990,
+    "brand": "LG",
+    "rating": 4.5,
+    "stock": 7,
+    "images": [
+      "https://m.media-amazon.com/images/I/71X0m9hjpwL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 16,
+    "name": "Samsung Refrigerator 253L",
+    "category": "Appliances",
+    "description": "Digital inverter double door refrigerator",
+    "price": 28990,
+    "brand": "Samsung",
+    "rating": 4.4,
+    "stock": 10,
+    "images": [
+      "https://m.media-amazon.com/images/I/71R7v6zO5mL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 17,
+    "name": "Philips 12W LED Bulb",
+    "category": "Home",
+    "description": "Long-life LED bulb with bright light",
+    "price": 149,
+    "brand": "Philips",
+    "rating": 4.2,
+    "stock": 120,
+    "images": [
+      "https://m.media-amazon.com/images/I/51zTGJhR6wL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 18,
+    "name": "Prestige 3L Pressure Cooker",
+    "category": "Kitchen",
+    "description": "Aluminium outer lid pressure cooker",
+    "price": 1599,
+    "brand": "Prestige",
+    "rating": 4.3,
+    "stock": 35,
+    "images": [
+      "https://m.media-amazon.com/images/I/61ZxO9z35VL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 19,
+    "name": "Milton Thermosteel Bottle 1L",
+    "category": "Kitchen",
+    "description": "Hot & cold stainless steel vacuum bottle",
+    "price": 899,
+    "brand": "Milton",
+    "rating": 4.4,
+    "stock": 42,
+    "images": [
+      "https://m.media-amazon.com/images/I/61MqefX6FsL._SL1500_.jpg"
+    ]
+  },
+  {
+    "product_id": 20,
+    "name": "Wildcraft Backpack 44L",
+    "category": "Accessories",
+    "description": "Durable water-resistant backpack for travel",
+    "price": 1299,
+    "brand": "Wildcraft",
+    "rating": 4.5,
+    "stock": 20,
+    "images": [
+      "https://m.media-amazon.com/images/I/81T9tE4LEaL._SL1500_.jpg"
+    ]
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "user_id": 1,
+    "name": "Arjun Kumar",
+    "email": "arjun1@example.com",
+    "phone": 9876100001,
+    "pinCode": 673001
+  },
+  {
+    "user_id": 2,
+    "name": "Amina Rahman",
+    "email": "amina2@example.com",
+    "phone": 9876100002,
+    "pinCode": 673002
+  },
+  {
+    "user_id": 3,
+    "name": "Rohit Das",
+    "email": "rohit3@example.com",
+    "phone": 9876100003,
+    "pinCode": 673003
+  },
+  {
+    "user_id": 4,
+    "name": "Neha Suresh",
+    "email": "neha4@example.com",
+    "phone": 9876100004,
+    "pinCode": 673004
+  },
+  {
+    "user_id": 5,
+    "name": "Sameer Ali",
+    "email": "sameer5@example.com",
+    "phone": 9876100005,
+    "pinCode": 673005
+  },
+  {
+    "user_id": 6,
+    "name": "Kiran Joseph",
+    "email": "kiran6@example.com",
+    "phone": 9876100006,
+    "pinCode": 673006
+  },
+  {
+    "user_id": 7,
+    "name": "Divya Menon",
+    "email": "divya7@example.com",
+    "phone": 9876100007,
+    "pinCode": 673007
+  },
+  {
+    "user_id": 8,
+    "name": "Vishal Nair",
+    "email": "vishal8@example.com",
+    "phone": 9876100008,
+    "pinCode": 673008
+  },
+  {
+    "user_id": 9,
+    "name": "Anjali Raj",
+    "email": "anjali9@example.com",
+    "phone": 9876100009,
+    "pinCode": 673009
+  },
+  {
+    "user_id": 10,
+    "name": "Midhun Varma",
+    "email": "midhun10@example.com",
+    "phone": 9876100010,
+    "pinCode": 673010
+  },
+  {
+    "user_id": 11,
+    "name": "Sruthi Mohan",
+    "email": "sruthi11@example.com",
+    "phone": 9876100011,
+    "pinCode": 673011
+  },
+  {
+    "user_id": 12,
+    "name": "Abhishek Pillai",
+    "email": "abhishek12@example.com",
+    "phone": 9876100012,
+    "pinCode": 673012
+  },
+  {
+    "user_id": 13,
+    "name": "Farhan Noor",
+    "email": "farhan13@example.com",
+    "phone": 9876100013,
+    "pinCode": 673013
+  },
+  {
+    "user_id": 14,
+    "name": "Sana Mariam",
+    "email": "sana14@example.com",
+    "phone": 9876100014,
+    "pinCode": 673014
+  },
+  {
+    "user_id": 15,
+    "name": "Joel John",
+    "email": "joel15@example.com",
+    "phone": 9876100015,
+    "pinCode": 673015
+  },
+  {
+    "user_id": 16,
+    "name": "Meera Babu",
+    "email": "meera16@example.com",
+    "phone": 9876100016,
+    "pinCode": 673016
+  },
+  {
+    "user_id": 17,
+    "name": "Rahul Krishnan",
+    "email": "rahul17@example.com",
+    "phone": 9876100017,
+    "pinCode": 673017
+  },
+  {
+    "user_id": 18,
+    "name": "Shilpa Thomas",
+    "email": "shilpa18@example.com",
+    "phone": 9876100018,
+    "pinCode": 673018
+  },
+  {
+    "user_id": 19,
+    "name": "Imran Khan",
+    "email": "imran19@example.com",
+    "phone": 9876100019,
+    "pinCode": 673019
+  },
+  {
+    "user_id": 20,
+    "name": "Catherine Jose",
+    "email": "cathy20@example.com",
+    "phone": 9876100020,
+    "pinCode": 673020
+  }
+]

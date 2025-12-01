@@ -3,7 +3,7 @@ const AutoIncrementFactory = require("mongoose-sequence")(mongoose);
 
 const userSchema = new mongoose.Schema(
   {
-    id: { type: Number, unique: true }, 
+    user_id: { type: Number, unique: true }, 
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: Number, required: true },
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.plugin(AutoIncrementFactory, {
-  inc_field: "id",
+  inc_field: "user_id",
   start_seq: 1,
 });
 
