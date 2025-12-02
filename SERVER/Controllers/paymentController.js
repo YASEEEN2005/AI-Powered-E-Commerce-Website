@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const Payment = require("../Models/Payment");
 const Cart = require("../Models/Cart");
 const User = require("../Models/User");
+const Order = require("../Models/Order");
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -97,7 +98,7 @@ const createOrder = async (req, res) => {
 
 // Verify Razorpay payment
 // POST /api/payments/verify
-// body: { user_id, razorpay_order_id, razorpay_payment_id, razorpay_signature }
+// body: { user_id, razorpay_order_id, razorpay_payment_id, razorpay_signature, shipping_address? }
 const verifyPayment = async (req, res) => {
   try {
     const {
@@ -105,6 +106,7 @@ const verifyPayment = async (req, res) => {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
+      shipping_address = "",
     } = req.body;
 
     if (
@@ -157,18 +159,52 @@ const verifyPayment = async (req, res) => {
     await payment.save();
 
     const cart = await Cart.findOne({ user_id: Number(user_id) });
-    if (cart) {
-      cart.items = [];
-      cart.totalAmount = 0;
-      cart.gst_amount = 0;
-      cart.platform_fee = 0;
-      await cart.save();
+
+    if (!cart || !cart.items || cart.items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Payment verified, but cart is empty. Order cannot be created.",
+      });
     }
+
+    const subtotal = cart.items.reduce((sum, item) => sum + item.subtotal, 0);
+
+    const order = await Order.create({
+      user_id: Number(user_id),
+      items: cart.items.map((item) => ({
+        product_id: item.product_id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        subtotal: item.subtotal,
+        image: item.image,
+      })),
+      subtotal,
+      gst_amount: cart.gst_amount || 0,
+      platform_fee: cart.platform_fee || 0,
+      totalAmount: cart.totalAmount || subtotal,
+      payment_status: "paid",
+      order_status: "placed",
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      shipping_address,
+    });
+
+    cart.items = [];
+    cart.totalAmount = 0;
+    cart.gst_amount = 0;
+    cart.platform_fee = 0;
+    await cart.save();
 
     return res.status(200).json({
       success: true,
-      message: "Payment verified successfully",
-      data: payment,
+      message: "Payment verified & order created successfully",
+      data: {
+        payment,
+        order,
+      },
     });
   } catch (error) {
     console.error("Error verifying payment:", error);
