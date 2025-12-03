@@ -4,6 +4,7 @@ import HeroBanner from './componets/HeroBanner'
 import FeatureSection from './componets/FeatureSection'
 import FeaturedProducts from './componets/FeaturedProducts'
 import StyleCollections from './componets/StyleCollections'
+import NewArrivals from './componets/NewArrivals'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <FeatureSection ></FeatureSection>
       <FeaturedProducts />
       <StyleCollections />
+      <NewArrivals />
     </div>
   )
 }
