@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.plugin(AutoIncrementFactory, {
+  id: "user_id_counter",
   inc_field: "user_id",
   start_seq: 1,
 });

@@ -44,6 +44,7 @@ const createProduct = async (req, res) => {
   try {
     const {
       product_id,
+      seller_id,
       name,
       category,
       description,
@@ -51,24 +52,27 @@ const createProduct = async (req, res) => {
       brand,
       rating,
       stock,
-      images
+      images,
     } = req.body;
 
     if (
       !product_id ||
+      !seller_id ||
       !name ||
       !category ||
       !description ||
       !price ||
       !brand
     ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Required fields missing" });
+      return res.status(400).json({
+        success: false,
+        message: "Required fields missing",
+      });
     }
 
     const product = await Product.create({
       product_id,
+      seller_id,
       name,
       category,
       description,
@@ -76,23 +80,22 @@ const createProduct = async (req, res) => {
       brand,
       rating,
       stock,
-      images
+      images,
     });
 
-    return res.status(201).json({
-      success: true,
-      message: "Product created",
-      data: product
-    });
+    return res
+      .status(201)
+      .json({ success: true, message: "Product created", data: product });
   } catch (error) {
     console.error("Error creating product:", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
-      error: error.message
+      error: error.message,
     });
   }
 };
+
 
 // UPDATE PRODUCT
 const updateProduct = async (req, res) => {

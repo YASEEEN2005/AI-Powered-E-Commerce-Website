@@ -6,16 +6,15 @@ const {
   updateOrderStatus,
   cancelOrder,
 } = require("../Controllers/orderController");
+const { auth } = require("../Middleware/authMiddleware");
 
 const router = express.Router();
 
-// user routes
-router.get("/orders/user/:user_id", getOrdersByUser);
-router.get("/orders/:order_id", getOrderById);
+router.get("/orders/user/:user_id", auth, getOrdersByUser);
+router.get("/orders/:order_id", auth, getOrderById);
 
-// admin routes
-router.get("/orders", getAllOrders);
-router.put("/orders/:order_id/status", updateOrderStatus);
-router.put("/orders/:order_id/cancel", cancelOrder);
+router.get("/orders", auth, getAllOrders);
+router.put("/orders/:order_id/status", auth, updateOrderStatus);
+router.put("/orders/:order_id/cancel", auth, cancelOrder);
 
 module.exports = router;

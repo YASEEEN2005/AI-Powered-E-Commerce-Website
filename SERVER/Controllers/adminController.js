@@ -1,4 +1,5 @@
 const Admin = require("../Models/Admin");
+const { generateToken } = require("../Middleware/authMiddleware");
 
 const createAdmin = async (req, res) => {
   try {
@@ -25,8 +26,8 @@ const createAdmin = async (req, res) => {
       success: true,
       message: "Admin created successfully",
       data: {
-        id: admin.id,      
-        _id: admin._id,     
+        id: admin.id,
+        _id: admin._id,
         email: admin.email,
       },
     });
@@ -39,7 +40,6 @@ const createAdmin = async (req, res) => {
     });
   }
 };
-
 
 const loginAdmin = async (req, res) => {
   try {
@@ -58,6 +58,12 @@ const loginAdmin = async (req, res) => {
         .json({ success: false, message: "Invalid email or password" });
     }
 
+    const token = generateToken({
+      admin_id: admin.id,
+      email: admin.email,
+      role: "admin",
+    });
+
     return res.status(200).json({
       success: true,
       message: "Login successful",
@@ -65,7 +71,9 @@ const loginAdmin = async (req, res) => {
         id: admin.id,
         _id: admin._id,
         email: admin.email,
+        role: "admin",
       },
+      token,
     });
   } catch (error) {
     console.error("Error logging in admin:", error);
@@ -76,7 +84,6 @@ const loginAdmin = async (req, res) => {
     });
   }
 };
-
 
 const getAdmins = async (req, res) => {
   try {
@@ -91,7 +98,6 @@ const getAdmins = async (req, res) => {
     });
   }
 };
-
 
 const getAdminById = async (req, res) => {
   try {
@@ -115,7 +121,6 @@ const getAdminById = async (req, res) => {
     });
   }
 };
-
 
 const updateAdmin = async (req, res) => {
   try {
@@ -157,7 +162,6 @@ const updateAdmin = async (req, res) => {
   }
 };
 
-
 const deleteAdmin = async (req, res) => {
   try {
     const adminId = Number(req.params.id);
@@ -182,7 +186,6 @@ const deleteAdmin = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   createAdmin,

@@ -1,6 +1,8 @@
 const Seller = require("../Models/Seller");
 const Product = require("../Models/Product");
 const Order = require("../Models/Order");
+const { generateToken } = require("../Middleware/authMiddleware");
+
 
 // POST /api/seller/profile
 const upsertSellerProfile = async (req, res) => {
@@ -56,10 +58,17 @@ const upsertSellerProfile = async (req, res) => {
       await seller.save();
     }
 
+    const token = generateToken({
+      seller_id: seller.seller_id,
+      phone: seller.phone,
+      role: "seller",
+    });
+
     return res.status(200).json({
       success: true,
       message: "Seller profile saved",
       data: seller,
+      token,
     });
   } catch (error) {
     console.error("Error saving seller:", error);
