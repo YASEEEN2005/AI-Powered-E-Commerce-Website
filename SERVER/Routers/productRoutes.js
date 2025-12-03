@@ -10,7 +10,7 @@ const { auth } = require("../Middleware/authMiddleware");
 
 const router = express.Router();
 
-router.get("/products", auth, getProducts);
+router.get("/products",  getProducts);
 router.get("/products/:product_id", auth, getProductById);
 router.post("/products",  auth, createProduct);
 router.put("/products/:product_id", auth, updateProduct);

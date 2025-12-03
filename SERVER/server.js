@@ -10,6 +10,8 @@ const orderRoutes = require("./Routers/orderRoutes");
 const wishlistRoutes = require("./Routers/wishlistRoutes");
 const sellerRoutes = require("./Routers/sellerRoutes");
 const userAuthRoutes = require("./Routers/userAuthRoutes");
+const cors = require("cors");
+app.use(cors());
 require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;
