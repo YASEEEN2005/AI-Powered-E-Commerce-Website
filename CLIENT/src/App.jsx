@@ -5,6 +5,8 @@ import FeatureSection from './componets/FeatureSection'
 import FeaturedProducts from './componets/FeaturedProducts'
 import StyleCollections from './componets/StyleCollections'
 import NewArrivals from './componets/NewArrivals'
+import Testimonials from './componets/Testimonials'
+import Footer from './componets/Footer'
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
       <FeaturedProducts />
       <StyleCollections />
       <NewArrivals />
+      <Testimonials />
+      <Footer />
     </div>
   )
 }
