@@ -3,6 +3,7 @@ import { Heart, ShoppingCart, Zap } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function StarRating({ rating = 0 }) {
   return (
@@ -24,6 +25,8 @@ function FeaturedProducts({ product, openLoginModal }) {
   const [wishlist, setWishlist] = useState([]);
   const { isAuthenticated, user, token } = useAuth();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -38,16 +41,51 @@ function FeaturedProducts({ product, openLoginModal }) {
     getProducts();
   }, []);
 
-  const toggleWishlist = (id) => {
-    if (!isAuthenticated) {
-      toast.info("Please login to use wishlist");
-      if (openLoginModal) openLoginModal();
-      return;
-    }
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
-    );
+const toggleWishlist = async (product) => {
+  if (!isAuthenticated) {
+    toast.info("Please login to use wishlist");
+    if (openLoginModal) openLoginModal();
+    return;
+  }
+
+  if (!user?.user_id) {
+    toast.error("User data not loaded");
+    return;
+  }
+
+  
+
+  const payload = {
+    user_id: user.user_id,
+    product_id: product.product_id,
   };
+
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/wishlist/add",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setWishlist((prev) =>
+      prev.includes(product.product_id)
+        ? prev.filter((pid) => pid !== product.product_id)
+        : [...prev, product.product_id]
+    );
+
+    toast.success(res.data?.message || "Wishlist updated");
+    console.log("Wishlist updated:", res.data);
+
+  } catch (err) {
+    console.error("Wishlist error:", err);
+    toast.error(err.response?.data?.message || "Failed to update wishlist");
+  }
+};
+
 
 
 const handleAddToCart = async (product) => {
@@ -88,15 +126,40 @@ const handleAddToCart = async (product) => {
   };
 
 
-  const handleBuyNow = (product) => {
-    if (!isAuthenticated) {
-      toast.info("Please login to buy");
-      if (openLoginModal) openLoginModal();
-      return;
-    }
-    console.log("Buy now:", product);
+  const handleBuyNow = async (product) => {
+  if (!isAuthenticated) {
+    toast.info("Please login to continue");
+    if (openLoginModal) openLoginModal();
+    return;
+  }
+
+  if (!user?.user_id) {
+    toast.error("User data not loaded");
+    return;
+  }
+
+  const payload = {
+    user_id: user.user_id,
+    product_id: product.product_id,
+    quantity: 1,
   };
 
+  try {
+    const { data } = await axios.post(
+      "http://localhost:5000/api/cart/add",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    navigate("/cart");
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || "Failed to add to cart");
+  }
+};
   const visibleProducts = products.slice(0, 8);
 
   return (
@@ -132,7 +195,7 @@ const handleAddToCart = async (product) => {
                     className="h-52 w-auto object-contain"
                   />
                   <button
-                    onClick={() => toggleWishlist(id)}
+                    onClick={() => toggleWishlist(product)}
                     className="absolute right-4 top-4 rounded-full bg-white/90 p-2 shadow-sm hover:bg-white"
                   >
                     <Heart

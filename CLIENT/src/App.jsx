@@ -6,20 +6,20 @@ import "react-toastify/dist/ReactToastify.css";
 import HomePage from "./componets/HomaPage";
 import OtpLogin from "./pages/OtpLogin";
 import ProtectedRoute from "./componets/ProtectedRoute";
-import Cart from "./pages/Cart";
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
+      <Route path="/cart" element={<CartPage />} />
       </Routes>
 
       
         {/* <Routes>
         <ProtectedRoute>
         <Route path="/login" element={<OtpLogin />} />
-        <Route path="/cart" element={<Cart />} />
         </ProtectedRoute>
         </Routes> */}
       
