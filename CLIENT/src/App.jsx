@@ -1,26 +1,29 @@
-import React from 'react'
-import Navbar from './componets/navBar'
-import HeroBanner from './componets/HeroBanner'
-import FeatureSection from './componets/FeatureSection'
-import FeaturedProducts from './componets/FeaturedProducts'
-import StyleCollections from './componets/StyleCollections'
-import NewArrivals from './componets/NewArrivals'
-import Testimonials from './componets/Testimonials'
-import Footer from './componets/Footer'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import HomePage from "./componets/HomaPage";
+import OtpLogin from "./pages/OtpLogin";
+
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <HeroBanner />
-      <FeatureSection ></FeatureSection>
-      <FeaturedProducts />
-      <StyleCollections />
-      <NewArrivals />
-      <Testimonials />
-      <Footer />
-    </div>
-  )
+    <>
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<OtpLogin />} />
+      </Routes>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="colored"
+      />
+    </>
+  );
 }
 
-export default App
+export default App;
