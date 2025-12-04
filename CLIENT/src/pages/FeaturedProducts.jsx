@@ -19,10 +19,10 @@ function StarRating({ rating = 0 }) {
   );
 }
 
-function FeaturedProducts() {
+function FeaturedProducts({ product, openLoginModal }) {
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, token } = useAuth();
 
   useEffect(() => {
     const getProducts = async () => {
@@ -49,14 +49,44 @@ function FeaturedProducts() {
     );
   };
 
-  const handleAddToCart = (product) => {
+
+const handleAddToCart = async (product) => {
     if (!isAuthenticated) {
       toast.info("Please login to use cart");
       if (openLoginModal) openLoginModal();
       return;
     }
-    console.log("Add to cart:", product);
+
+    if (!user?.user_id) {
+      toast.error("User data not loaded");
+      return;
+    }
+
+    const payload = {
+      user_id: user.user_id,  
+      product_id: product.product_id,  
+      quantity: 1,               
+    };
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/cart/add", 
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
+
+      toast.success("Product added to cart");
+      console.log("Cart updated:", data);
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Failed to add to cart");
+    }
   };
+
 
   const handleBuyNow = (product) => {
     if (!isAuthenticated) {
