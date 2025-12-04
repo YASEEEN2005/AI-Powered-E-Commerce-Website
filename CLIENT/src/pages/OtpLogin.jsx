@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { auth } from "../auth/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+
+import { auth } from "../auth/firebase";
+import { useAuth } from "../context/AuthContext";
 
 export default function OtpLogin({ onClose }) {
   const [step, setStep] = useState("send");
@@ -24,6 +26,7 @@ export default function OtpLogin({ onClose }) {
   });
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const setupRecaptcha = () => {
     if (!window.recaptchaVerifier) {
@@ -97,10 +100,12 @@ export default function OtpLogin({ onClose }) {
       const data = await confirmation.confirm(code);
       const firebasePhone = data.user.phoneNumber || "";
       setUserPhone(firebasePhone);
+
       setUserForm((prev) => ({
         ...prev,
         phone: phone || firebasePhone.replace("+91", ""),
       }));
+
       toast.success("OTP verified");
       setStep("details");
     } catch (err) {
@@ -164,8 +169,7 @@ export default function OtpLogin({ onClose }) {
         throw new Error("Token not found in session response");
       }
 
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("currentUser", JSON.stringify(createdUser));
+      login(createdUser, token);
 
       toast.success("Profile saved and logged in");
       setStep("success");

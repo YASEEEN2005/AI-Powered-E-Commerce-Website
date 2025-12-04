@@ -1,26 +1,26 @@
-import React from 'react'
-import Navbar from '../pages/navBar'
-import HeroBanner from '../pages/HeroBanner'
-import FeatureSection from '../pages/FeatureSection'
-import FeaturedProducts from '../pages/FeaturedProducts'
-import StyleCollections from '../pages/StyleCollections'
-import NewArrivals from '../pages/NewArrivals'
-import Testimonials from '../pages/Testimonials'
-import Footer from '../pages/Footer'
+import React from "react";
+import Navbar from "../pages/navBar";
+import HeroBanner from "../pages/HeroBanner";
+import FeatureSection from "../pages/FeatureSection";
+import FeaturedProducts from "../pages/FeaturedProducts";
+import StyleCollections from "../pages/StyleCollections";
+import NewArrivals from "../pages/NewArrivals";
+import Testimonials from "../pages/Testimonials";
+import Footer from "../pages/Footer";
 
 function HomaPage() {
   return (
     <div>
-        <Navbar />
+      <Navbar />
       <HeroBanner />
-      <FeatureSection ></FeatureSection>
+      <FeatureSection></FeatureSection>
       <FeaturedProducts />
       <StyleCollections />
       <NewArrivals />
       <Testimonials />
       <Footer />
     </div>
-  )
+  );
 }
 
-export default HomaPage
+export default HomaPage;

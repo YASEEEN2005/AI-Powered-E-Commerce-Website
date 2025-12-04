@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Heart, ShoppingCart, Zap } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 function StarRating({ rating = 0 }) {
   return (
@@ -20,6 +22,7 @@ function StarRating({ rating = 0 }) {
 function FeaturedProducts() {
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     const getProducts = async () => {
@@ -36,16 +39,31 @@ function FeaturedProducts() {
   }, []);
 
   const toggleWishlist = (id) => {
+    if (!isAuthenticated) {
+      toast.info("Please login to use wishlist");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
     setWishlist((prev) =>
       prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
     );
   };
 
   const handleAddToCart = (product) => {
+    if (!isAuthenticated) {
+      toast.info("Please login to use cart");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
     console.log("Add to cart:", product);
   };
 
   const handleBuyNow = (product) => {
+    if (!isAuthenticated) {
+      toast.info("Please login to buy");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
     console.log("Buy now:", product);
   };
 
