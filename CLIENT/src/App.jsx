@@ -13,7 +13,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<OtpLogin />} />
+        {/* <Route path="/login" element={<OtpLogin />} /> */}
       </Routes>
 
       <ToastContainer

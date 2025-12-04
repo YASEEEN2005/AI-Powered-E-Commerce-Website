@@ -9,9 +9,13 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import Modal from "../componets/Modal";
+import OtpLogin from "../pages/OtpLogin";
+
 function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   const toggleDropdown = (name) => {
     setOpenDropdown((prev) => (prev === name ? null : name));
@@ -20,8 +24,6 @@ function Navbar() {
   return (
     <header className="w-full bg-white">
       <div className="mx-auto max-w-[1400px] px-6 py-4 flex items-center justify-between">
-
-
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl font-black tracking-tight">
             Swift<span className="font-light">Cart</span>
@@ -29,7 +31,6 @@ function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-800 md:flex">
-
           <div className="relative group">
             <button className="flex items-center gap-1 hover:text-black">
               <span>Home</span>
@@ -98,26 +99,32 @@ function Navbar() {
             <Search className="h-4 w-4" />
           </button>
 
-          <Link to="/wishlist" className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100">
+          <Link
+            to="/wishlist"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100"
+          >
             <Heart className="h-4 w-4" />
             <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-semibold text-white">
               0
             </span>
           </Link>
 
-          <Link to="/cart" className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100">
+          <Link
+            to="/cart"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100"
+          >
             <ShoppingBag className="h-4 w-4" />
             <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-semibold text-white">
               0
             </span>
           </Link>
 
-          <Link
-            to="/login"
+          <button
+            onClick={() => setLoginOpen(true)}
             className="hidden rounded-full border border-slate-200 ml-2 px-6 py-1.5 text-sm font-medium text-slate-900 shadow-sm hover:border-slate-300 hover:bg-slate-50 md:inline-flex"
           >
             Login
-          </Link>
+          </button>
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -131,7 +138,6 @@ function Navbar() {
       {mobileOpen && (
         <div className="border-t bg-white md:hidden">
           <div className="flex flex-col px-4 py-3 text-sm">
-
             <button
               className="flex w-full items-center justify-between py-2"
               onClick={() => toggleDropdown("home")}
@@ -193,15 +199,25 @@ function Navbar() {
               Contact
             </Link>
 
-            <Link
-              to="/login"
+            <button
+              onClick={() => setLoginOpen(true)}
               className="mt-2 rounded-full border border-slate-200 px-4 py-2 text-center text-sm font-medium shadow-sm hover:border-slate-300 hover:bg-slate-50"
             >
               Login
-            </Link>
+            </button>
           </div>
         </div>
       )}
+
+      <Modal
+        isOpen={loginOpen}
+        onClose={() => setLoginOpen(false)}
+        title=""
+        subtitle=""
+        maxWidth="max-w-sm"
+      >
+        <OtpLogin onClose={() => setLoginOpen(false)} />
+      </Modal>
     </header>
   );
 }
