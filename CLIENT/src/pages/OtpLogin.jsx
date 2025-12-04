@@ -3,6 +3,7 @@ import { auth } from "../auth/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function OtpLogin({ onClose }) {
   const [step, setStep] = useState("send");
@@ -13,6 +14,14 @@ export default function OtpLogin({ onClose }) {
   const [userPhone, setUserPhone] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isSubmittingDetails, setIsSubmittingDetails] = useState(false);
+
+  const [userForm, setUserForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    pinCode: "",
+  });
 
   const navigate = useNavigate();
 
@@ -21,9 +30,7 @@ export default function OtpLogin({ onClose }) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
         "recaptcha-container",
-        {
-          size: "invisible",
-        }
+        { size: "invisible" }
       );
     }
     return window.recaptchaVerifier;
@@ -52,17 +59,13 @@ export default function OtpLogin({ onClose }) {
     const appVerifier = setupRecaptcha();
 
     try {
-      const result = await signInWithPhoneNumber(
-        auth,
-        "+91" + phone,
-        appVerifier
-      );
+      const result = await signInWithPhoneNumber(auth, "+91" + phone, appVerifier);
       setConfirmation(result);
       setStep("verify");
       startTimer();
       toast.success(`OTP sent to +91 ${phone}`);
     } catch (err) {
-      console.log("OTP Error:", err);
+      console.error("OTP Error:", err);
       toast.error(err.message || "Failed to send OTP");
     } finally {
       setIsSending(false);
@@ -92,18 +95,94 @@ export default function OtpLogin({ onClose }) {
     setIsVerifying(true);
     try {
       const data = await confirmation.confirm(code);
-      setUserPhone(data.user.phoneNumber);
+      const firebasePhone = data.user.phoneNumber || "";
+      setUserPhone(firebasePhone);
+      setUserForm((prev) => ({
+        ...prev,
+        phone: phone || firebasePhone.replace("+91", ""),
+      }));
+      toast.success("OTP verified");
+      setStep("details");
+    } catch (err) {
+      console.error("OTP verify error:", err);
+      toast.error("Invalid OTP ❌");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setUserForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const submitUserDetails = async (e) => {
+    e.preventDefault();
+
+    if (!userForm.name || !userForm.email || !userForm.phone || !userForm.pinCode) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    setIsSubmittingDetails(true);
+
+    try {
+      const userPayload = {
+        name: userForm.name.trim(),
+        email: userForm.email.trim(),
+        phone: Number(userForm.phone),
+        pinCode: Number(userForm.pinCode),
+      };
+
+      const userRes = await axios.post(
+        "http://localhost:5000/api/users",
+        userPayload
+      );
+
+      const createdUser = userRes.data?.data || userRes.data?.user || userRes.data;
+      const userId =
+        createdUser?.user_id ?? createdUser?.id ?? createdUser?._id;
+
+      if (!userId) {
+        throw new Error("User ID not found from API response");
+      }
+
+      const sessionRes = await axios.post(
+        "http://localhost:5000/api/users/session",
+        { user_id: userId }
+      );
+
+      const token =
+        sessionRes.data?.token ||
+        sessionRes.data?.data?.token ||
+        sessionRes.data?.accessToken;
+
+      if (!token) {
+        throw new Error("Token not found in session response");
+      }
+
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("currentUser", JSON.stringify(createdUser));
+
+      toast.success("Profile saved and logged in");
       setStep("success");
-      toast.success("Login successful 🎉");
 
       setTimeout(() => {
         if (onClose) onClose();
         navigate("/");
       }, 800);
     } catch (err) {
-      toast.error("Invalid OTP ❌");
+      console.error("User details submit error:", err);
+      toast.error(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to save user details"
+      );
     } finally {
-      setIsVerifying(false);
+      setIsSubmittingDetails(false);
     }
   };
 
@@ -123,21 +202,23 @@ export default function OtpLogin({ onClose }) {
       <div className="mb-4 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
         <span
           className={`h-1.5 w-6 rounded-full ${
-            step === "send" || step === "verify" || step === "success"
+            step === "send" || step === "verify" || step === "details" || step === "success"
               ? "bg-slate-900"
               : "bg-slate-300"
           }`}
         />
         <span
           className={`h-1.5 w-6 rounded-full ${
-            step === "verify" || step === "success"
+            step === "verify" || step === "details" || step === "success"
               ? "bg-slate-900"
               : "bg-slate-300"
           }`}
         />
         <span
           className={`h-1.5 w-6 rounded-full ${
-            step === "success" ? "bg-slate-900" : "bg-slate-300"
+            step === "details" || step === "success"
+              ? "bg-slate-900"
+              : "bg-slate-300"
           }`}
         />
       </div>
@@ -218,16 +299,87 @@ export default function OtpLogin({ onClose }) {
         </>
       )}
 
+      {step === "details" && (
+        <form onSubmit={submitUserDetails} className="space-y-3">
+          <p className="text-xs text-slate-600 mb-2">
+            Complete your profile to continue. All fields are required.
+          </p>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-700">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300"
+              placeholder="Your full name"
+              value={userForm.name}
+              onChange={handleDetailsChange}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-700">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300"
+              placeholder="you@example.com"
+              value={userForm.email}
+              onChange={handleDetailsChange}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-700">
+              Phone
+            </label>
+            <input
+              type="text"
+              name="phone"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300"
+              value={userForm.phone}
+              onChange={handleDetailsChange}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-700">
+              Pin Code
+            </label>
+            <input
+              type="text"
+              name="pinCode"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300"
+              placeholder="e.g. 673002"
+              value={userForm.pinCode}
+              onChange={handleDetailsChange}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmittingDetails}
+            className="mt-2 w-full rounded-full bg-slate-900 py-2.5 text-sm font-semibold text-white hover:bg-black disabled:opacity-60 disabled:cursor-not-allowed transition"
+          >
+            {isSubmittingDetails ? "Saving..." : "Save & Continue"}
+          </button>
+        </form>
+      )}
+
       {step === "success" && (
         <div className="text-center py-4">
           <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
             ✅
           </div>
           <h2 className="text-sm font-semibold text-emerald-700 mb-1">
-            Login Successful
+            Login Complete
           </h2>
           <p className="text-xs text-slate-600">
-            Welcome, <span className="font-semibold">{userPhone}</span>
+            You are now logged in and your profile is saved.
           </p>
         </div>
       )}
