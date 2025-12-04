@@ -7,6 +7,7 @@ import HomePage from "./componets/HomaPage";
 import OtpLogin from "./pages/OtpLogin";
 import ProtectedRoute from "./componets/ProtectedRoute";
 import CartPage from "./pages/CartPage";
+import WishlistPage from "./pages/WishlistPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
       <Route path="/cart" element={<CartPage />} />
+      <Route path="/wishlist" element={<WishlistPage />} />
       </Routes>
 
       
