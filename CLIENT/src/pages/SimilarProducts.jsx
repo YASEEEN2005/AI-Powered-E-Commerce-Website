@@ -10,6 +10,7 @@ function SimilarProducts({ category, currentProductId }) {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
   const { token } = useAuth();
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     if (!category) {
@@ -24,7 +25,7 @@ function SimilarProducts({ category, currentProductId }) {
           headers.Authorization = `Bearer ${token}`;
         }
 
-        const res = await axios.get("http://localhost:5000/api/products", {
+        const res = await axios.get(`${api}/api/products`, {
           headers,
         });
 

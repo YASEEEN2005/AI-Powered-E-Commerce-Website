@@ -17,6 +17,7 @@ export default function OtpLogin({ onClose }) {
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSubmittingDetails, setIsSubmittingDetails] = useState(false);
+  const api = import.meta.env.VITE_BACKEND_API;
 
   const [userForm, setUserForm] = useState({
     name: "",
@@ -62,7 +63,11 @@ export default function OtpLogin({ onClose }) {
     const appVerifier = setupRecaptcha();
 
     try {
-      const result = await signInWithPhoneNumber(auth, "+91" + phone, appVerifier);
+      const result = await signInWithPhoneNumber(
+        auth,
+        "+91" + phone,
+        appVerifier
+      );
       setConfirmation(result);
       setStep("verify");
       startTimer();
@@ -127,7 +132,12 @@ export default function OtpLogin({ onClose }) {
   const submitUserDetails = async (e) => {
     e.preventDefault();
 
-    if (!userForm.name || !userForm.email || !userForm.phone || !userForm.pinCode) {
+    if (
+      !userForm.name ||
+      !userForm.email ||
+      !userForm.phone ||
+      !userForm.pinCode
+    ) {
       toast.error("All fields are required");
       return;
     }
@@ -142,12 +152,10 @@ export default function OtpLogin({ onClose }) {
         pinCode: Number(userForm.pinCode),
       };
 
-      const userRes = await axios.post(
-        "http://localhost:5000/api/users",
-        userPayload
-      );
+      const userRes = await axios.post(`${api}/api/users`, userPayload);
 
-      const createdUser = userRes.data?.data || userRes.data?.user || userRes.data;
+      const createdUser =
+        userRes.data?.data || userRes.data?.user || userRes.data;
       const userId =
         createdUser?.user_id ?? createdUser?.id ?? createdUser?._id;
 
@@ -155,10 +163,9 @@ export default function OtpLogin({ onClose }) {
         throw new Error("User ID not found from API response");
       }
 
-      const sessionRes = await axios.post(
-        "http://localhost:5000/api/users/session",
-        { user_id: userId }
-      );
+      const sessionRes = await axios.post(`${api}/api/users/session`, {
+        user_id: userId,
+      });
 
       const token =
         sessionRes.data?.token ||
@@ -206,7 +213,10 @@ export default function OtpLogin({ onClose }) {
       <div className="mb-4 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
         <span
           className={`h-1.5 w-6 rounded-full ${
-            step === "send" || step === "verify" || step === "details" || step === "success"
+            step === "send" ||
+            step === "verify" ||
+            step === "details" ||
+            step === "success"
               ? "bg-slate-900"
               : "bg-slate-300"
           }`}
@@ -310,9 +320,7 @@ export default function OtpLogin({ onClose }) {
           </p>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-700">
-              Name
-            </label>
+            <label className="text-xs font-medium text-slate-700">Name</label>
             <input
               type="text"
               name="name"
@@ -324,9 +332,7 @@ export default function OtpLogin({ onClose }) {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-700">
-              Email
-            </label>
+            <label className="text-xs font-medium text-slate-700">Email</label>
             <input
               type="email"
               name="email"
@@ -338,9 +344,7 @@ export default function OtpLogin({ onClose }) {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-700">
-              Phone
-            </label>
+            <label className="text-xs font-medium text-slate-700">Phone</label>
             <input
               type="text"
               name="phone"

@@ -11,7 +11,8 @@ function CartPage() {
 
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [updatingItem, setUpdatingItem] = useState(null); 
+  const [updatingItem, setUpdatingItem] = useState(null);
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     if (!isAuthenticated || !user?.user_id) {
@@ -21,14 +22,11 @@ function CartPage() {
 
     const fetchCart = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/cart/${user.user_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.get(`${api}/api/cart/${user.user_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setCart(res.data.data || null);
       } catch (err) {
         console.error("Error fetching cart:", err);
@@ -58,15 +56,11 @@ function CartPage() {
     };
 
     try {
-      const res = await axios.put(
-        "http://localhost:5000/api/cart/item",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.put(`${api}/api/cart/item`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setCart(res.data.data);
       toast.success("Cart updated");
@@ -90,15 +84,11 @@ function CartPage() {
         quantity: 0,
       };
 
-      const res = await axios.put(
-        "http://localhost:5000/api/cart/item",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.put(`${api}/api/cart/item`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setCart(res.data.data);
       toast.success("Item removed from cart");
@@ -227,7 +217,10 @@ function CartPage() {
                               item.quantity - 1
                             )
                           }
-                          disabled={item.quantity <= 1 || updatingItem === item.product_id}
+                          disabled={
+                            item.quantity <= 1 ||
+                            updatingItem === item.product_id
+                          }
                           className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-slate-100 disabled:opacity-50"
                         >
                           <Minus className="h-3 w-3" />

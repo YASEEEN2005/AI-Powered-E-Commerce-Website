@@ -21,6 +21,7 @@ function AccountPage() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     if (!isAuthenticated || !user?.user_id) {
@@ -30,14 +31,11 @@ function AccountPage() {
 
     const fetchUser = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/users/${user.user_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.get(`${api}/api/users/${user.user_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setProfile(res.data.data);
       } catch (err) {
         toast.error("Failed to load account details");
@@ -200,9 +198,7 @@ function AccountPage() {
               <ul className="text-[11px] text-slate-600 list-disc pl-4 space-y-1">
                 <li>We do not store your password on this platform.</li>
                 <li>Login sessions are limited and can be revoked anytime.</li>
-                <li>
-                  Use your own device and network for best security.
-                </li>
+                <li>Use your own device and network for best security.</li>
               </ul>
             </div>
           </div>

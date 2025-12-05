@@ -10,15 +10,16 @@ function EditProfileModal({ isOpen, onClose, profile, onUpdate }) {
   const [form, setForm] = useState({
     name: profile?.name || "",
     email: profile?.email || "",
-    pinCode: profile?.pinCode || ""
+    pinCode: profile?.pinCode || "",
   });
 
   const [loading, setLoading] = useState(false);
+  const api = import.meta.env.VITE_BACKEND_API;
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -31,15 +32,11 @@ function EditProfileModal({ isOpen, onClose, profile, onUpdate }) {
     try {
       setLoading(true);
 
-      const res = await axios.put(
-        `http://localhost:5000/api/users/${user.user_id}`,
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const res = await axios.put(`${api}/api/users/${user.user_id}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success("Profile updated successfully");
       onUpdate(res.data.data);
@@ -57,7 +54,9 @@ function EditProfileModal({ isOpen, onClose, profile, onUpdate }) {
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 px-4">
       <div className="bg-white rounded-2xl w-full max-w-md p-5 shadow-xl">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-slate-900">Edit Profile</h2>
+          <h2 className="text-base font-semibold text-slate-900">
+            Edit Profile
+          </h2>
           <button onClick={onClose}>
             <X className="h-5 w-5 text-slate-600" />
           </button>

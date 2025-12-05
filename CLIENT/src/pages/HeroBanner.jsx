@@ -44,7 +44,6 @@ const banners = [
   },
 ];
 
-
 function HeroBanner() {
   const [current, setCurrent] = useState(0);
 

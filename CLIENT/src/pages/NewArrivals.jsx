@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Heart, ShoppingCart, Zap } from "lucide-react";
 import axios from "axios";
+import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 function StarRating({ rating = 0 }) {
   return (
@@ -17,13 +20,16 @@ function StarRating({ rating = 0 }) {
   );
 }
 function NewArrivals() {
- const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const { loadCartCount } = useCart();
+  const { isAuthenticated, user, token } = useAuth();
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products");
+        const res = await axios.get(`${api}/api/products`);
         const data = res.data.data || [];
         setProducts(data);
       } catch (error) {
@@ -34,14 +40,75 @@ function NewArrivals() {
     getProducts();
   }, []);
 
-  const toggleWishlist = (id) => {
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
-    );
+  const toggleWishlist = async (product) => {
+    if (!isAuthenticated) {
+      toast.info("Please login to use wishlist");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
+
+    if (!user?.user_id) {
+      toast.error("User data not loaded");
+      return;
+    }
+
+    const payload = {
+      user_id: user.user_id,
+      product_id: product.product_id,
+    };
+
+    try {
+      const res = await axios.post(`${api}/api/wishlist/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setWishlist((prev) =>
+        prev.includes(product.product_id)
+          ? prev.filter((pid) => pid !== product.product_id)
+          : [...prev, product.product_id]
+      );
+
+      toast.success(res.data?.message || "Wishlist updated");
+      console.log("Wishlist updated:", res.data);
+    } catch (err) {
+      console.error("Wishlist error:", err);
+      toast.error(err.response?.data?.message || "Failed to update wishlist");
+    }
   };
 
-  const handleAddToCart = (product) => {
-    console.log("Add to cart:", product);
+  const handleAddToCart = async (product) => {
+    if (!isAuthenticated) {
+      toast.info("Please login to use cart");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
+
+    if (!user?.user_id) {
+      toast.error("User data not loaded");
+      return;
+    }
+
+    const payload = {
+      user_id: user.user_id,
+      product_id: product.product_id,
+      quantity: 1,
+    };
+
+    try {
+      const { data } = await axios.post(`${api}/api/cart/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      loadCartCount();
+      toast.success("Product added to cart");
+      console.log("Cart updated:", data);
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Failed to add to cart");
+    }
   };
 
   const handleBuyNow = (product) => {
@@ -51,7 +118,7 @@ function NewArrivals() {
   const visibleProducts = products.slice(8, 16);
 
   return (
-     <section className="w-full bg-white py-14">
+    <section className="w-full bg-white py-14">
       <div className="mx-auto max-w-[1400px] px-6">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-semibold text-slate-900">
@@ -83,7 +150,7 @@ function NewArrivals() {
                     className="h-52 w-auto object-contain"
                   />
                   <button
-                    onClick={() => toggleWishlist(id)}
+                    onClick={() => toggleWishlist(product)}
                     className="absolute right-4 top-4 rounded-full bg-white/90 p-2 shadow-sm hover:bg-white"
                   >
                     <Heart
@@ -134,7 +201,7 @@ function NewArrivals() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default NewArrivals
+export default NewArrivals;

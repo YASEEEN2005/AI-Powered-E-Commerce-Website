@@ -11,7 +11,6 @@ import Footer from "../pages/Footer";
 function HomaPage() {
   return (
     <div>
-      <Navbar />
       <HeroBanner />
       <FeatureSection></FeatureSection>
       <FeaturedProducts />

@@ -2,29 +2,28 @@ import React, { useState, useEffect } from "react";
 import {
   ChevronDown,
   Search,
-  Heart,
   ShoppingBag,
+  Heart,
   Menu,
   X,
   User,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 import Modal from "../componets/Modal";
 import OtpLogin from "../pages/OtpLogin";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [loginOpen, setLoginOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-  const [wishlistCount, setWishlistCount] = useState(0);
 
   const navigate = useNavigate();
-  const { logout, isAuthenticated, user, token } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
+  const { cartCount } = useCart();
 
   const toggleDropdown = (name) => {
     setOpenDropdown((prev) => (prev === name ? null : name));
@@ -45,54 +44,11 @@ function Navbar() {
     logout();
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
-    setCartCount(0);
-    setWishlistCount(0);
     navigate("/");
   };
 
-  useEffect(() => {
-    if (!isAuthenticated || !user?.user_id || !token) {
-      setCartCount(0);
-      setWishlistCount(0);
-      return;
-    }
-
-    const fetchCounts = async () => {
-      try {
-        const [cartRes, wishlistRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/cart/${user.user_id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-          axios.get(`http://localhost:5000/api/wishlist/${user.user_id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-        ]);
-
-        const cartData = cartRes.data?.data;
-        const cartItems = cartData?.items || [];
-        const totalCartQty = cartItems.reduce(
-          (sum, item) => sum + (item.quantity || 1),
-          0
-        );
-        setCartCount(totalCartQty);
-
-        const wishlistData = wishlistRes.data?.data;
-        const wishlistItems = wishlistData?.items || [];
-        setWishlistCount(wishlistItems.length);
-      } catch (err) {
-        console.error("Error fetching counts:", err);
-      }
-    };
-
-    fetchCounts();
-  }, [isAuthenticated, user, token]);
-
   return (
-    <header className="w-full bg-white relative z-50">
+    <header className="w-full sticky top-0 bg-white/90 backdrop-blur border-b border-slate-100 z-50">
       <div className="mx-auto max-w-[1400px] px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl font-black tracking-tight">
@@ -103,25 +59,10 @@ function Navbar() {
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-800 md:flex">
           <div className="relative group">
             <button className="flex items-center gap-1 hover:text-black">
-              <span>Home</span>
-              <ChevronDown className="h-4 w-4" />
+              <Link to="/" className=" hover:text-black">
+                Home
+              </Link>
             </button>
-
-            <div
-              className="invisible absolute left-0 mt-3 w-44 rounded-xl border 
-              border-slate-100 bg-white opacity-0 shadow-xl transition-all
-              group-hover:visible group-hover:opacity-100 z-50"
-            >
-              <Link to="/" className="block px-4 py-2 hover:bg-slate-50">
-                Default Home
-              </Link>
-              <Link
-                to="/minimal-home"
-                className="block px-4 py-2 hover:bg-slate-50"
-              >
-                Minimal Home
-              </Link>
-            </div>
           </div>
 
           <div className="relative group">
@@ -131,25 +72,25 @@ function Navbar() {
             </button>
 
             <div
-              className="invisible absolute left-0 mt-3 w-44 rounded-xl border 
-              border-slate-100 bg-white opacity-0 shadow-xl transition-all
-              group-hover:visible group-hover:opacity-100 z-50"
+              className="invisible absolute left-0 mt-3 w-48 rounded-2xl bg-white/95 
+              shadow-[0_18px_45px_rgba(15,23,42,0.18)] ring-1 ring-black/5 opacity-0 translate-y-1
+              transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 z-50"
             >
               <Link
                 to="/products"
-                className="block px-4 py-2 hover:bg-slate-50"
+                className="block px-4 py-2 text-sm hover:bg-slate-50"
               >
                 All Products
               </Link>
               <Link
                 to="/new-arrivals"
-                className="block px-4 py-2 hover:bg-slate-50"
+                className="block px-4 py-2 text-sm hover:bg-slate-50"
               >
                 New Arrivals
               </Link>
               <Link
                 to="/best-sellers"
-                className="block px-4 py-2 hover:bg-slate-50"
+                className="block px-4 py-2 text-sm hover:bg-slate-50"
               >
                 Best Sellers
               </Link>
@@ -167,17 +108,26 @@ function Navbar() {
             </button>
 
             <div
-              className="invisible absolute left-0 mt-3 w-44 rounded-xl border
-              border-slate-100 bg-white opacity-0 shadow-xl transition-all
-              group-hover:visible group-hover:opacity-100 z-50"
+              className="invisible absolute left-0 mt-3 w-48 rounded-2xl bg-white/95 
+              shadow-[0_18px_45px_rgba(15,23,42,0.18)] ring-1 ring-black/5 opacity-0 translate-y-1
+              transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 z-50"
             >
-              <Link to="/about" className="block px-4 py-2 hover:bg-slate-50">
+              <Link
+                to="/about"
+                className="block px-4 py-2 text-sm hover:bg-slate-50"
+              >
                 About Us
               </Link>
-              <Link to="/faq" className="block px-4 py-2 hover:bg-slate-50">
+              <Link
+                to="/faq"
+                className="block px-4 py-2 text-sm hover:bg-slate-50"
+              >
                 FAQ
               </Link>
-              <Link to="/policy" className="block px-4 py-2 hover:bg-slate-50">
+              <Link
+                to="/policy"
+                className="block px-4 py-2 text-sm hover:bg-slate-50"
+              >
                 Terms & Policy
               </Link>
             </div>
@@ -189,39 +139,26 @@ function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <button
-            className="hidden h-9 w-9 items-center justify-center rounded-full 
-            hover:bg-slate-100 md:flex"
-          >
+          <button className="hidden h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100 md:flex">
             <Search className="h-4 w-4" />
           </button>
-
           <Link
             to="/wishlist"
-            className="relative flex h-9 w-9 items-center justify-center 
-            rounded-full hover:bg-slate-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100"
           >
-            <Heart className="h-4 w-4" />
-            <span
-              className="absolute -top-1 -right-1 h-4 min-w-[16px] px-0.5 flex items-center justify-center 
-              rounded-full bg-black text-white text-[10px]"
-            >
-              {wishlistCount}
-            </span>
+            <Heart className="h-5 w-5" />
           </Link>
 
           <Link
             to="/cart"
-            className="relative flex h-9 w-9 items-center justify-center 
-            rounded-full hover:bg-slate-100"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100"
           >
             <ShoppingBag className="h-4 w-4" />
-            <span
-              className="absolute -top-1 -right-1 h-4 min-w-[16px] px-0.5 flex items-center justify-center 
-              rounded-full bg-black text-white text-[10px]"
-            >
-              {cartCount}
-            </span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-0.5 flex items-center justify-center rounded-full bg-black text-white text-[10px]">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
           {!isLoggedIn ? (
@@ -244,37 +181,37 @@ function Navbar() {
               </button>
 
               <div
-                className="invisible absolute right-0 mt-2 w-44 rounded-xl border border-slate-100 
-                bg-white opacity-0 shadow-xl transition-all group-hover:visible 
-                group-hover:opacity-100 z-50"
+                className="invisible absolute right-0 mt-2 w-44 rounded-2xl bg-white/95 
+                shadow-[0_18px_45px_rgba(15,23,42,0.18)] ring-1 ring-black/5 opacity-0 translate-y-1
+                transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 z-50"
               >
                 <Link
                   to="/account"
-                  className="block px-4 py-2 hover:bg-slate-50"
+                  className="block px-4 py-2 text-sm hover:bg-slate-50"
                 >
                   Account
                 </Link>
                 <Link
                   to="/orders"
-                  className="block px-4 py-2 hover:bg-slate-50"
+                  className="block px-4 py-2 text-sm hover:bg-slate-50"
                 >
                   Orders
                 </Link>
                 <Link
                   to="/payments"
-                  className="block px-4 py-2 hover:bg-slate-50"
+                  className="block px-4 py-2 text-sm hover:bg-slate-50"
                 >
                   Payment
                 </Link>
                 <Link
                   to="/address"
-                  className="block px-4 py-2 hover:bg-slate-50"
+                  className="block px-4 py-2 text-sm hover:bg-slate-50"
                 >
                   Address
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-red-500 hover:bg-slate-50"
+                  className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-slate-50"
                 >
                   Logout
                 </button>

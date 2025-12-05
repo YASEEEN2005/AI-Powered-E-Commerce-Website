@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 function ProductsPage({ openLoginModal }) {
   const { isAuthenticated, user, token } = useAuth();
@@ -27,11 +28,13 @@ function ProductsPage({ openLoginModal }) {
   const [maxPrice, setMaxPrice] = useState(0);
   const [priceFilter, setPriceFilter] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const { loadCartCount } = useCart();
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products");
+        const res = await axios.get(`${api}/api/products`);
         const data = res.data.data || [];
         setProducts(data);
 
@@ -126,7 +129,7 @@ function ProductsPage({ openLoginModal }) {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/wishlist/add",
+        `${api}/api/wishlist/add`,
         {
           user_id: user.user_id,
           product_id: product.product_id,
@@ -167,19 +170,16 @@ function ProductsPage({ openLoginModal }) {
     };
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/cart/add",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          validateStatus: () => true,
-        }
-      );
+      const res = await axios.post(`${api}/api/cart/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        validateStatus: () => true,
+      });
 
       if (res.status >= 200 && res.status < 300) {
         toast.success("Added to cart");
+        loadCartCount();
       } else {
         toast.error(res.data?.message || "Failed to add to cart");
       }

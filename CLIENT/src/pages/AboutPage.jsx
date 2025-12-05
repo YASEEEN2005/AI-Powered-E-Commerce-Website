@@ -1,5 +1,12 @@
 import React from "react";
-import { ShoppingBag, Users, Globe, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import {
+  ShoppingBag,
+  Users,
+  Globe,
+  ShieldCheck,
+  Sparkles,
+  Truck,
+} from "lucide-react";
 
 function AboutPage() {
   return (
@@ -13,8 +20,8 @@ function AboutPage() {
             Built for modern online shopping
           </h1>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto">
-            SwiftCart is a next-generation e-commerce experience designed to make
-            shopping fast, personalized, and delightful for everyone.
+            SwiftCart is a next-generation e-commerce experience designed to
+            make shopping fast, personalized, and delightful for everyone.
           </p>
         </div>
 
@@ -159,8 +166,8 @@ function AboutPage() {
           <p className="text-xs text-slate-700 leading-relaxed">
             As the platform evolves, SwiftCart can be extended with more
             advanced features like seller analytics, reviews and ratings,
-            real-time inventory, and deeper AI-driven insights to create a
-            truly intelligent shopping ecosystem.
+            real-time inventory, and deeper AI-driven insights to create a truly
+            intelligent shopping ecosystem.
           </p>
         </div>
       </div>

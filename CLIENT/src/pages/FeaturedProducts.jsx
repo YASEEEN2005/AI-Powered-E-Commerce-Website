@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Heart, ShoppingCart, Zap } from "lucide-react";
+import { Heart, Import, ShoppingCart, Zap } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function StarRating({ rating = 0 }) {
   return (
@@ -24,13 +25,15 @@ function FeaturedProducts({ product, openLoginModal }) {
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const { isAuthenticated, user, token } = useAuth();
+  const { loadCartCount } = useCart();
+  const api = import.meta.env.VITE_BACKEND_API;
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products");
+        const res = await axios.get(`${api}/api/products`);
         const data = res.data.data || [];
         setProducts(data);
       } catch (error) {
@@ -41,54 +44,45 @@ function FeaturedProducts({ product, openLoginModal }) {
     getProducts();
   }, []);
 
-const toggleWishlist = async (product) => {
-  if (!isAuthenticated) {
-    toast.info("Please login to use wishlist");
-    if (openLoginModal) openLoginModal();
-    return;
-  }
+  const toggleWishlist = async (product) => {
+    if (!isAuthenticated) {
+      toast.info("Please login to use wishlist");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
 
-  if (!user?.user_id) {
-    toast.error("User data not loaded");
-    return;
-  }
+    if (!user?.user_id) {
+      toast.error("User data not loaded");
+      return;
+    }
 
-  
+    const payload = {
+      user_id: user.user_id,
+      product_id: product.product_id,
+    };
 
-  const payload = {
-    user_id: user.user_id,
-    product_id: product.product_id,
-  };
-
-  try {
-    const res = await axios.post(
-      "http://localhost:5000/api/wishlist/add",
-      payload,
-      {
+    try {
+      const res = await axios.post(`${api}/api/wishlist/add`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
+      });
 
-    setWishlist((prev) =>
-      prev.includes(product.product_id)
-        ? prev.filter((pid) => pid !== product.product_id)
-        : [...prev, product.product_id]
-    );
+      setWishlist((prev) =>
+        prev.includes(product.product_id)
+          ? prev.filter((pid) => pid !== product.product_id)
+          : [...prev, product.product_id]
+      );
 
-    toast.success(res.data?.message || "Wishlist updated");
-    console.log("Wishlist updated:", res.data);
+      toast.success(res.data?.message || "Wishlist updated");
+      console.log("Wishlist updated:", res.data);
+    } catch (err) {
+      console.error("Wishlist error:", err);
+      toast.error(err.response?.data?.message || "Failed to update wishlist");
+    }
+  };
 
-  } catch (err) {
-    console.error("Wishlist error:", err);
-    toast.error(err.response?.data?.message || "Failed to update wishlist");
-  }
-};
-
-
-
-const handleAddToCart = async (product) => {
+  const handleAddToCart = async (product) => {
     if (!isAuthenticated) {
       toast.info("Please login to use cart");
       if (openLoginModal) openLoginModal();
@@ -101,22 +95,18 @@ const handleAddToCart = async (product) => {
     }
 
     const payload = {
-      user_id: user.user_id,  
-      product_id: product.product_id,  
-      quantity: 1,               
+      user_id: user.user_id,
+      product_id: product.product_id,
+      quantity: 1,
     };
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/cart/add", 
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      );
-
+      const { data } = await axios.post(`${api}/api/cart/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      loadCartCount();
       toast.success("Product added to cart");
       console.log("Cart updated:", data);
     } catch (err) {
@@ -125,41 +115,36 @@ const handleAddToCart = async (product) => {
     }
   };
 
-
   const handleBuyNow = async (product) => {
-  if (!isAuthenticated) {
-    toast.info("Please login to continue");
-    if (openLoginModal) openLoginModal();
-    return;
-  }
+    if (!isAuthenticated) {
+      toast.info("Please login to continue");
+      if (openLoginModal) openLoginModal();
+      return;
+    }
 
-  if (!user?.user_id) {
-    toast.error("User data not loaded");
-    return;
-  }
+    if (!user?.user_id) {
+      toast.error("User data not loaded");
+      return;
+    }
 
-  const payload = {
-    user_id: user.user_id,
-    product_id: product.product_id,
-    quantity: 1,
-  };
+    const payload = {
+      user_id: user.user_id,
+      product_id: product.product_id,
+      quantity: 1,
+    };
 
-  try {
-    const { data } = await axios.post(
-      "http://localhost:5000/api/cart/add",
-      payload,
-      {
+    try {
+      const { data } = await axios.post(`${api}/api/cart/add`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
-    navigate("/cart");
-  } catch (err) {
-    console.error(err);
-    toast.error(err.response?.data?.message || "Failed to add to cart");
-  }
-};
+      });
+      navigate("/cart");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Failed to add to cart");
+    }
+  };
   const visibleProducts = products.slice(0, 8);
 
   return (

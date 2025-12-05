@@ -18,6 +18,7 @@ import {
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import SimilarProducts from "./SimilarProducts";
+import { useCart } from "../context/CartContext";
 
 function ProductDetailsPage({ openLoginModal }) {
   const { product_id } = useParams();
@@ -29,6 +30,8 @@ function ProductDetailsPage({ openLoginModal }) {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const { loadCartCount } = useCart();
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -38,10 +41,9 @@ function ProductDetailsPage({ openLoginModal }) {
           headers.Authorization = `Bearer ${token}`;
         }
 
-        const res = await axios.get(
-          `http://localhost:5000/api/products/${product_id}`,
-          { headers }
-        );
+        const res = await axios.get(`${api}/api/products/${product_id}`, {
+          headers,
+        });
         const data = res.data.data;
         setProduct(data);
       } catch (err) {
@@ -93,7 +95,7 @@ function ProductDetailsPage({ openLoginModal }) {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/wishlist/add",
+        `${api}/api/wishlist/add`,
         {
           user_id: user.user_id,
           product_id: product.product_id,
@@ -135,19 +137,16 @@ function ProductDetailsPage({ openLoginModal }) {
     };
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/cart/add",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          validateStatus: () => true,
-        }
-      );
+      const res = await axios.post(`${api}/api/cart/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        validateStatus: () => true,
+      });
 
       if (res.status >= 200 && res.status < 300) {
         toast.success("Added to cart");
+        loadCartCount();
       } else {
         toast.error(res.data?.message || "Failed to add to cart");
       }
@@ -177,16 +176,12 @@ function ProductDetailsPage({ openLoginModal }) {
     };
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/cart/add",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          validateStatus: () => true,
-        }
-      );
+      const res = await axios.post(`${api}/api/cart/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        validateStatus: () => true,
+      });
 
       if (res.status >= 200 && res.status < 300) {
         navigate("/cart");

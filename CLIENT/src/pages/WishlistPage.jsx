@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { HeartOff, ArrowLeft, Loader2, Trash2, ShoppingBag } from "lucide-react";
+import {
+  HeartOff,
+  ArrowLeft,
+  Loader2,
+  Trash2,
+  ShoppingBag,
+} from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
@@ -12,6 +18,7 @@ function WishlistPage() {
   const [wishlist, setWishlist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(null);
+  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     if (!isAuthenticated || !user?.user_id) {
@@ -21,14 +28,11 @@ function WishlistPage() {
 
     const fetchWishlist = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/wishlist/${user.user_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
+        const res = await axios.get(`${api}/api/wishlist/${user.user_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setWishlist(res.data.data || null);
       } catch (err) {
         toast.error("Failed to load wishlist");
@@ -46,17 +50,20 @@ function WishlistPage() {
     setProcessing(product_id);
 
     try {
-      await axios.delete("http://localhost:5000/api/wishlist/item", {
+      await axios.delete(`${api}/api/wishlist/item`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {
           user_id: user.user_id,
-          product_id
-        }
+          product_id,
+        },
       });
 
       setWishlist((prev) =>
         prev
-          ? { ...prev, items: prev.items.filter((i) => i.product_id !== product_id) }
+          ? {
+              ...prev,
+              items: prev.items.filter((i) => i.product_id !== product_id),
+            }
           : prev
       );
 
@@ -77,8 +84,8 @@ function WishlistPage() {
     setProcessing("all");
 
     try {
-      await axios.delete(`http://localhost:5000/api/wishlist/${user.user_id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+      await axios.delete(`${api}/api/wishlist/${user.user_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setWishlist((prev) => (prev ? { ...prev, items: [] } : prev));
@@ -96,19 +103,22 @@ function WishlistPage() {
     const payload = {
       user_id: user.user_id,
       product_id: item.product_id,
-      quantity: 1
+      quantity: 1,
     };
 
     try {
-      await axios.post("http://localhost:5000/api/cart/add", payload, {
+      await axios.post(`${api}/api/cart/add`, payload, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       setWishlist((prev) =>
         prev
-          ? { ...prev, items: prev.items.filter((p) => p.product_id !== item.product_id) }
+          ? {
+              ...prev,
+              items: prev.items.filter((p) => p.product_id !== item.product_id),
+            }
           : prev
       );
 
@@ -124,7 +134,9 @@ function WishlistPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-semibold mb-4">Your Wishlist</h1>
-        <p className="text-slate-600 mb-6">Please log in to view your wishlist.</p>
+        <p className="text-slate-600 mb-6">
+          Please log in to view your wishlist.
+        </p>
         <button
           onClick={() => navigate("/")}
           className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-6 py-2 text-sm font-medium shadow-sm hover:bg-slate-50"
@@ -167,7 +179,9 @@ function WishlistPage() {
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Your Wishlist</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+              Your Wishlist
+            </h1>
             <p className="text-sm text-slate-600 mt-1">
               {items.length} item{items.length !== 1 ? "s" : ""} saved
             </p>
@@ -217,8 +231,12 @@ function WishlistPage() {
               </div>
 
               <div className="flex flex-col p-4 flex-1">
-                <h2 className="text-sm font-semibold text-slate-900 line-clamp-2">{item.name}</h2>
-                <p className="mt-1 text-xs text-slate-500">Product ID: {item.product_id}</p>
+                <h2 className="text-sm font-semibold text-slate-900 line-clamp-2">
+                  {item.name}
+                </h2>
+                <p className="mt-1 text-xs text-slate-500">
+                  Product ID: {item.product_id}
+                </p>
 
                 <p className="mt-3 text-base font-semibold text-slate-900">
                   ₹{item.price.toLocaleString("en-IN")}

@@ -15,35 +15,34 @@ import AboutPage from "./pages/AboutPage";
 import FAQPage from "./pages/FAQPage";
 import TermsPolicyPage from "./pages/TermsPolicyPage";
 import AccountPage from "./pages/AccountPage";
+import Navbar from "./pages/navBar";
 
 function App() {
   return (
     <>
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-      <Route path="/cart" element={<CartPage />} />
-      <Route path="/wishlist" element={<WishlistPage />} />
-      <Route path="/products" element={<ProductsPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/faq" element={<FAQPage />} />
-      <Route path="/policy" element={<TermsPolicyPage />} />
-      <Route path="/account" element={<AccountPage />} />
-      <Route path="/product/:product_id" element={<ProductDetailsPage />} />
-
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+        <Route path="/policy" element={<TermsPolicyPage />} />
+        <Route path="/account" element={<AccountPage />} />
+        <Route path="/product/:product_id" element={<ProductDetailsPage />} />
       </Routes>
 
-      
-        {/* <Routes>
+      {/* <Routes>
         <ProtectedRoute>
         <Route path="/login" element={<OtpLogin />} />
         </ProtectedRoute>
         </Routes> */}
-      
 
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         pauseOnHover
         theme="colored"
       />
