@@ -192,7 +192,7 @@ function Navbar() {
                   Account
                 </Link>
                 <Link
-                  to="/orders"
+                  to="/account/orders"
                   className="block px-4 py-2 text-sm hover:bg-slate-50"
                 >
                   Orders

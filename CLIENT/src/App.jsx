@@ -19,6 +19,8 @@ import Navbar from "./pages/navBar";
 import OrderSummaryPage from "./pages/OrderSummaryPage";
 import AddressPage from "./pages/AddressPage";
 import PaymentPage from "./pages/PaymentPage";
+import OrdersPage from "./pages/OrdersPage";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
         <Route path="/order-summary" element={<OrderSummaryPage />} />
         <Route path="/address" element={<AddressPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/account/orders" element={<OrdersPage />} />
+        <Route path="/account/orders/:orderId" element={<OrderDetailsPage />} />
       </Routes>
 
       {/* <Routes>
