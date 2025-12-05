@@ -12,6 +12,8 @@ import ProductsPage from "./pages/ProductsPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
+import FAQPage from "./pages/FAQPage";
+import TermsPolicyPage from "./pages/TermsPolicyPage";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/faq" element={<FAQPage />} />
+      <Route path="/policy" element={<TermsPolicyPage />} />
       <Route path="/product/:product_id" element={<ProductDetailsPage />} />
 
       </Routes>
