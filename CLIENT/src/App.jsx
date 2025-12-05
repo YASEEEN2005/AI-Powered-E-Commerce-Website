@@ -9,6 +9,8 @@ import ProtectedRoute from "./componets/ProtectedRoute";
 import CartPage from "./pages/CartPage";
 import WishlistPage from "./pages/WishlistPage";
 import ProductsPage from "./pages/ProductsPage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
       <Route path="/cart" element={<CartPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
       <Route path="/products" element={<ProductsPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/product/:product_id" element={<ProductDetailsPage />} />
+
       </Routes>
 
       
