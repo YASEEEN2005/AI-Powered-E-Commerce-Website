@@ -16,8 +16,6 @@ const addressSchema = new mongoose.Schema(
     phone: {
       type: Number,
       required: true,
-      min: 6000000000,
-      max: 9999999999,
     },
 
     pinCode: {

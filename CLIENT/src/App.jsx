@@ -17,6 +17,7 @@ import TermsPolicyPage from "./pages/TermsPolicyPage";
 import AccountPage from "./pages/AccountPage";
 import Navbar from "./pages/navBar";
 import OrderSummaryPage from "./pages/OrderSummaryPage";
+import AddressPage from "./pages/AddressPage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/account" element={<AccountPage />} />
         <Route path="/product/:product_id" element={<ProductDetailsPage />} />
         <Route path="/order-summary" element={<OrderSummaryPage />} />
+        <Route path="/address" element={<AddressPage />} />
       </Routes>
 
       {/* <Routes>
