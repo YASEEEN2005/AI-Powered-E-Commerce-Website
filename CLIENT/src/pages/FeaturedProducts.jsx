@@ -44,7 +44,9 @@ function FeaturedProducts({ openLoginModal }) {
     getProducts();
   }, []);
 
-  const toggleWishlist = async (product) => {
+  const toggleWishlist = async (product, e) => {
+    if (e) e.stopPropagation();
+
     if (!isAuthenticated) {
       toast.info("Please login to use wishlist");
       if (openLoginModal) openLoginModal();
@@ -81,7 +83,9 @@ function FeaturedProducts({ openLoginModal }) {
     }
   };
 
-  const handleAddToCart = async (product) => {
+  const handleAddToCart = async (product, e) => {
+    if (e) e.stopPropagation();
+
     if (!isAuthenticated) {
       toast.info("Please login to use cart");
       if (openLoginModal) openLoginModal();
@@ -113,7 +117,9 @@ function FeaturedProducts({ openLoginModal }) {
     }
   };
 
-  const handleBuyNow = (product) => {
+  const handleBuyNow = (product, e) => {
+    if (e) e.stopPropagation();
+
     if (!isAuthenticated) {
       toast.info("Please login to continue");
       if (openLoginModal) openLoginModal();
@@ -130,7 +136,7 @@ function FeaturedProducts({ openLoginModal }) {
       "https://via.placeholder.com/300x300?text=Product";
 
     const buyNowItem = {
-      productId: product.product_id, // your actual id
+      productId: product.product_id,
       name: product.name,
       price: product.price,
       image: image,
@@ -144,6 +150,12 @@ function FeaturedProducts({ openLoginModal }) {
         user_id: user.user_id,
       },
     });
+  };
+
+  const handleCardClick = (product) => {
+    const id = product.product_id || product._id;
+    if (!id) return;
+    navigate(`/product/${id}`);
   };
 
   const visibleProducts = products.slice(0, 8);
@@ -177,7 +189,8 @@ function FeaturedProducts({ openLoginModal }) {
               return (
                 <div
                   key={id}
-                  className="flex flex-col border border-slate-200 rounded-xl overflow-hidden bg-white"
+                  onClick={() => handleCardClick(product)}
+                  className="flex flex-col border border-slate-200 rounded-xl overflow-hidden bg-white cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition"
                 >
                   <div className="relative bg-slate-50 flex items-center justify-center h-52">
                     <img
@@ -186,7 +199,7 @@ function FeaturedProducts({ openLoginModal }) {
                       className="h-44 w-auto object-contain"
                     />
                     <button
-                      onClick={() => toggleWishlist(product)}
+                      onClick={(e) => toggleWishlist(product, e)}
                       className="absolute right-3 top-3 rounded-full bg-white p-2 shadow-sm"
                     >
                       <Heart
@@ -216,14 +229,14 @@ function FeaturedProducts({ openLoginModal }) {
 
                     <div className="mt-3 flex flex-col gap-2">
                       <button
-                        onClick={() => handleAddToCart(product)}
+                        onClick={(e) => handleAddToCart(product, e)}
                         className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-black"
                       >
                         <ShoppingCart className="h-4 w-4" />
                         Add to Cart
                       </button>
                       <button
-                        onClick={() => handleBuyNow(product)}
+                        onClick={(e) => handleBuyNow(product, e)}
                         className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-900 hover:bg-slate-50"
                       >
                         <Zap className="h-4 w-4" />
