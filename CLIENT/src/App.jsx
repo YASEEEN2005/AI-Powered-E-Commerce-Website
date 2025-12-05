@@ -8,6 +8,7 @@ import OtpLogin from "./pages/OtpLogin";
 import ProtectedRoute from "./componets/ProtectedRoute";
 import CartPage from "./pages/CartPage";
 import WishlistPage from "./pages/WishlistPage";
+import ProductsPage from "./pages/ProductsPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
+      <Route path="/products" element={<ProductsPage />} />
       </Routes>
 
       
