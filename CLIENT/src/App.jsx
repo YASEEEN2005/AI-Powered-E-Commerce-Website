@@ -16,6 +16,7 @@ import FAQPage from "./pages/FAQPage";
 import TermsPolicyPage from "./pages/TermsPolicyPage";
 import AccountPage from "./pages/AccountPage";
 import Navbar from "./pages/navBar";
+import OrderSummaryPage from "./pages/OrderSummaryPage";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/policy" element={<TermsPolicyPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/product/:product_id" element={<ProductDetailsPage />} />
+        <Route path="/order-summary" element={<OrderSummaryPage />} />
       </Routes>
 
       {/* <Routes>

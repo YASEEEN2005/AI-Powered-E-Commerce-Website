@@ -303,7 +303,7 @@ function CartPage() {
             </div>
 
             <button
-              onClick={() => toast.info("Checkout flow coming soon 😉")}
+              onClick={() => navigate("/order-summary")}
               className="mt-5 w-full rounded-full bg-black text-white py-2.5 text-sm font-medium hover:bg-slate-900 disabled:opacity-50"
             >
               Proceed to Checkout
