@@ -18,6 +18,7 @@ import AccountPage from "./pages/AccountPage";
 import Navbar from "./pages/navBar";
 import OrderSummaryPage from "./pages/OrderSummaryPage";
 import AddressPage from "./pages/AddressPage";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/product/:product_id" element={<ProductDetailsPage />} />
         <Route path="/order-summary" element={<OrderSummaryPage />} />
         <Route path="/address" element={<AddressPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
       </Routes>
 
       {/* <Routes>
