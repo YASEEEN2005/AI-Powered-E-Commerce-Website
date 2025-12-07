@@ -60,7 +60,7 @@ function Footer() {
           <ul className="text-slate-700 text-sm space-y-2">
             <li>
               <Link
-                to="/login"
+                to="/seller"
                 className="hover:text-slate-900 hover:underline underline-offset-4 transition"
               >
                 Seller Login
