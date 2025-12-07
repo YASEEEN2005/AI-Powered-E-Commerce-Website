@@ -286,6 +286,39 @@ const rejectSeller = async (req, res) => {
   }
 };
 
+const getSellerByPhone = async (req, res) => {
+  try {
+    const phone = String(req.params.phone);
+
+    const seller = await Seller.findOne({ phone });
+
+    if (!seller) {
+      return res.status(404).json({
+        success: false,
+        message: "Seller not found",
+      });
+    }
+
+    const token = generateToken({
+      seller_id: seller.seller_id,
+      phone: seller.phone,
+      role: "seller",
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: seller,
+      token,
+    });
+  } catch (err) {
+    console.error("getSellerByPhone error:", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   upsertSellerProfile,
   getSellerProfile,
@@ -296,4 +329,5 @@ module.exports = {
   deleteSeller,
   approveSeller,
   rejectSeller,
+  getSellerByPhone,
 };

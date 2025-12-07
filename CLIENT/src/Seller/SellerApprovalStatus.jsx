@@ -44,7 +44,7 @@ function SellerApprovalStatus() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm text-gray-600">
+      <div className=" flex items-center justify-center text-sm text-gray-600">
         Loading seller status...
       </div>
     );
@@ -65,7 +65,7 @@ function SellerApprovalStatus() {
         {freshSeller.status === "pending" && (
           <>
             <h2 className="text-2xl font-semibold mb-3">
-              Waiting for Approval
+              Waiting for Approval 
             </h2>
             <p className="text-sm text-slate-600">
               Your seller application is under review. You will be notified once

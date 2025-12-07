@@ -3,42 +3,39 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  // USER STATE
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
 
+  // SELLER STATE
   const [sellerToken, setSellerToken] = useState(null);
   const [seller, setSeller] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
-    const storedUser = localStorage.getItem("currentUser");
+    try {
+      // USER
+      const storedToken = localStorage.getItem("authToken");
+      const storedUser = localStorage.getItem("currentUser");
 
-    if (storedToken) setToken(storedToken);
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        setUser(null);
-      }
+      if (storedToken) setToken(storedToken);
+      if (storedUser) setUser(JSON.parse(storedUser));
+
+      // SELLER
+      const storedSellerToken = localStorage.getItem("sellerToken");
+      const storedSellerInfo = localStorage.getItem("sellerInfo");
+
+      if (storedSellerToken) setSellerToken(storedSellerToken);
+      if (storedSellerInfo) setSeller(JSON.parse(storedSellerInfo));
+    } catch (err) {
+      console.error("Error loading auth from storage:", err);
+    } finally {
+      setLoading(false);
     }
-
-    const storedSellerToken = localStorage.getItem("sellerToken");
-    const storedSellerInfo = localStorage.getItem("sellerInfo");
-
-    if (storedSellerToken) setSellerToken(storedSellerToken);
-    if (storedSellerInfo) {
-      try {
-        setSeller(JSON.parse(storedSellerInfo));
-      } catch {
-        setSeller(null);
-      }
-    }
-
-    setLoading(false);
   }, []);
 
+  // USER LOGIN
   const login = (newUser, newToken) => {
     setUser(newUser);
     setToken(newToken);
@@ -53,6 +50,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("currentUser");
   };
 
+  // SELLER LOGIN
   const sellerLogin = (sellerData, token) => {
     setSeller(sellerData);
     setSellerToken(token);
@@ -68,17 +66,20 @@ export function AuthProvider({ children }) {
   };
 
   const value = {
+    // user
     user,
     token,
     isAuthenticated: !!token,
     login,
     logout,
 
+    // seller
     seller,
     sellerToken,
     isSellerAuthenticated: !!sellerToken,
     sellerLogin,
     sellerLogout,
+
 
     loading,
   };

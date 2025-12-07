@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 import { auth } from "../auth/firebase";
 import Modal from "../componets/Modal";
+import { useAuth } from "../context/AuthContext";
 
 const api = import.meta.env.VITE_BACKEND_API;
 
@@ -27,8 +28,10 @@ export default function SellerOtpLogin({ isOpen = true, onClose }) {
     bank_name: "",
     account_number: "",
     ifsc_code: "",
+    phone: "",
   });
 
+  const { sellerLogin } = useAuth();
   const navigate = useNavigate();
 
   const setupRecaptcha = () => {
@@ -95,6 +98,33 @@ export default function SellerOtpLogin({ isOpen = true, onClose }) {
     }
   };
 
+  const checkExistingSeller = async (phoneNumber) => {
+    try {
+      const res = await axios.get(`${api}/api/seller/by-phone/${phoneNumber}`);
+      const existingSeller = res.data?.data;
+      const token =
+        res.data?.token ||
+        res.data?.accessToken ||
+        res.data?.data?.token ||
+        null;
+
+      if (existingSeller && token) {
+        sellerLogin(existingSeller, token);
+        toast.success("Welcome back, seller");
+
+        if (existingSeller.status === "approved") {
+          navigate("/seller/dashboard");
+        } else {
+          navigate("/seller/status");
+        }
+        return true;
+      }
+    } catch (err) {
+      console.log("No existing seller found for phone:", phoneNumber);
+    }
+    return false;
+  };
+
   const verifyOtp = async () => {
     const code = otp.join("");
     if (code.length !== 6) {
@@ -111,14 +141,20 @@ export default function SellerOtpLogin({ isOpen = true, onClose }) {
     try {
       const data = await confirmation.confirm(code);
       const firebasePhone = data.user.phoneNumber || "";
+      const finalPhone = phone || firebasePhone.replace("+91", "");
 
       setSellerForm((prev) => ({
         ...prev,
-        phone: phone || firebasePhone.replace("+91", ""),
+        phone: finalPhone,
       }));
 
       toast.success("OTP verified");
-      setStep("details");
+
+      const existed = await checkExistingSeller(finalPhone);
+
+      if (!existed) {
+        setStep("details");
+      }
     } catch (err) {
       console.error("Seller OTP verify error:", err);
       toast.error("Invalid OTP ❌");
@@ -183,8 +219,7 @@ export default function SellerOtpLogin({ isOpen = true, onClose }) {
         throw new Error("Seller token not found in response");
       }
 
-      localStorage.setItem("sellerToken", token);
-      localStorage.setItem("sellerInfo", JSON.stringify(seller));
+      sellerLogin(seller, token);
 
       toast.success("Seller profile saved");
 

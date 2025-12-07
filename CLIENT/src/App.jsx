@@ -24,6 +24,7 @@ import SellerRouters from "./Routers/SellerRouters";
 
 import ProtectedRoute from "./componets/ProtectedRoute";
 import SellerApprovalStatus from "./Seller/SellerApprovalStatus";
+import SellerDashboard from "./Seller/SellerDashboard";
 
 function AppInner() {
   const location = useLocation();
@@ -38,7 +39,7 @@ function AppInner() {
         {/* Seller-side */}
         <Route path="/seller/*" element={<SellerRouters />} />
         {/* <Route path="/seller" element={<SellerRouters />} /> */}
-        {/* <Route path="/status" element={<SellerApprovalStatus />} /> */}
+        {/* <Route path="/seller/dashboard" element={<SellerDashboard />} /> */}
 
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />

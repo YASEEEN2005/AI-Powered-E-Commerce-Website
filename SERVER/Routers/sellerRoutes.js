@@ -9,6 +9,7 @@ const {
   deleteSeller,
   approveSeller,
   rejectSeller,
+  getSellerByPhone,
 } = require("../Controllers/sellerController");
 const { auth, adminAuth, sellerAuth } = require("../Middleware/authMiddleware");
 
@@ -18,6 +19,7 @@ router.post("/seller/profile", upsertSellerProfile);
 router.get("/seller/:seller_id", auth, getSellerProfile);
 router.get("/seller/:seller_id/products", auth, getSellerProducts);
 router.get("/seller/:seller_id/orders", auth, getSellerOrders);
+router.get("/seller/by-phone/:phone", getSellerByPhone);
 
 router.get("/admin/sellers", auth, adminAuth, getAllSellers);
 router.get("/admin/seller/:seller_id", auth, adminAuth, getSellerByIdAdmin);
