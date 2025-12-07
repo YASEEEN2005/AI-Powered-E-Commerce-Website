@@ -56,7 +56,9 @@ function SellerNavbar() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <Link to='/seller/account'>
             <User size={16} />
+            </Link>
             <span>{seller?.name || "Seller"}</span>
           </div>
 

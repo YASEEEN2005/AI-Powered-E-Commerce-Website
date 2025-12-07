@@ -10,6 +10,7 @@ import SellerProducts from "../Seller/SellerProducts";
 import SellerOrders from "../Seller/SellerOrders";
 import SellerContact from "../Seller/SellerContact";
 import SellerRevenue from "../Seller/SellerRevenue";
+import SellerAccount from "../Seller/SellerAccount";
 
 function SellerRouters() {
   return (
@@ -23,6 +24,7 @@ function SellerRouters() {
         <Route path="/orders" element={<SellerOrders />} />
         <Route path="/contact" element={<SellerContact />} />
         <Route path="/revenue" element={<SellerRevenue />} />
+        <Route path="/account" element={<SellerAccount />} />
 
         {/* <Route
           path="/dashboard"
