@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, LogOut, User, Home, Package, ShoppingBag } from "lucide-react";
+import { Menu, LogOut, User, Home, Package, ShoppingBag ,Contact } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 function SellerNavbar() {
@@ -17,6 +17,7 @@ function SellerNavbar() {
     { label: "Dashboard", path: "/seller/dashboard", icon: <Home size={16} /> },
     { label: "Products", path: "/seller/products", icon: <Package size={16} /> },
     { label: "Orders", path: "/seller/orders", icon: <ShoppingBag size={16} /> },
+    { label: "Contact", path: "/seller/contact", icon: <Contact size={16} /> },
   ];
 
   if (location.pathname === "/seller") {

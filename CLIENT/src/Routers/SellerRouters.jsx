@@ -6,6 +6,8 @@ import SellerApprovalStatus from "../Seller/SellerApprovalStatus";
 import SellerNavbar from "../Seller/SellerNavbar";
 import SellerProtectedRoute from "../componets/SellerProtectedRoute";
 import SellerDashboard from "../Seller/SellerDashboard";
+import SellerProducts from "../Seller/SellerProducts";
+import SellerOrders from "../Seller/SellerOrders";
 
 function SellerRouters() {
   return (
@@ -15,6 +17,8 @@ function SellerRouters() {
         <Route path="/" element={<SellerOtpLogin />} />
         <Route path="/status" element={<SellerApprovalStatus />} />
         <Route path="/dashboard" element={<SellerDashboard />} />
+        <Route path="/products" element={<SellerProducts />} />
+        <Route path="/orders" element={<SellerOrders />} />
 
 
 
