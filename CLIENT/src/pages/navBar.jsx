@@ -140,7 +140,9 @@ function Navbar() {
 
         <div className="flex items-center gap-3">
           <button className="hidden h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100 md:flex">
-            <Search className="h-4 w-4" />
+            <Link to="/products">
+              <Search className="h-4 w-4" />
+            </Link>
           </button>
           <Link
             to="/wishlist"

@@ -50,12 +50,7 @@ function App() {
         </ProtectedRoute>
         </Routes> */}
 
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        pauseOnHover
-        theme="colored"
-      />
+      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
     </>
   );
 }

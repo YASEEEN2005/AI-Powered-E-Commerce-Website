@@ -25,9 +25,8 @@ function Testimonials() {
   ];
 
   return (
-    <section className="w-full py-16 bg-white">
+    <section className="w-full bg-white">
       <div className="mx-auto max-w-[1400px] px-6">
-
         <div className="text-center mb-12">
           <h2 className="text-3xl font-semibold text-slate-900">
             What Our Customers Say
