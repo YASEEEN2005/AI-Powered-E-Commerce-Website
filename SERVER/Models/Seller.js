@@ -3,10 +3,7 @@ const AutoIncrementFactory = require("mongoose-sequence")(mongoose);
 
 const sellerSchema = new mongoose.Schema(
   {
-    seller_id: {
-      type: Number,
-      unique: true,
-    },
+    seller_id: { type: Number, unique: true },
 
     phone: {
       type: String,
@@ -22,37 +19,22 @@ const sellerSchema = new mongoose.Schema(
       default: "",
     },
 
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    name: { type: String, required: true, trim: true },
 
-    shop_name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    shop_name: { type: String, required: true, trim: true },
 
-    location: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    location: { type: String, required: true, trim: true },
 
-    bank_name: {
-      type: String,
-      required: true,
-    },
+    bank_name: { type: String, required: true },
 
-    account_number: {
-      type: String,
-      required: true,
-    },
+    account_number: { type: String, required: true },
 
-    ifsc_code: {
+    ifsc_code: { type: String, required: true },
+
+    status: {
       type: String,
-      required: true,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
   },
   { timestamps: true }
