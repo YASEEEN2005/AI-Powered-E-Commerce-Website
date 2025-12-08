@@ -8,6 +8,7 @@ import {
   Package,
   ShoppingBag,
   MessageCircle,
+  Banknote
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
@@ -42,6 +43,12 @@ function SellerNavbar() {
       path: "/seller/orders",
       icon: <ShoppingBag size={16} />,
       protected: true,
+    },
+    {
+      label: "Payout",
+      path: "/seller/payouts",
+      icon: <Banknote size={16} />,
+      protected: true, 
     },
     {
       label: "Contact",
@@ -109,6 +116,7 @@ function SellerNavbar() {
             );
           })}
         </nav>
+
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm font-medium text-gray-700">

@@ -1,8 +1,10 @@
-const Seller = require("../Models/Seller");
-const Product = require("../Models/Product");
-const Order = require("../Models/Order");
-const { generateToken } = require("../Middleware/authMiddleware");
+const Seller = require("./Models/Seller");
+const Product = require("./Models/Product");
+const Order = require("./Models/Order");
+const { generateToken } = require("./Middleware/authMiddleware");
 
+// POST /api/seller/profile
+// create or update seller by phone, return token
 const upsertSellerProfile = async (req, res) => {
   try {
     const {
@@ -34,6 +36,7 @@ const upsertSellerProfile = async (req, res) => {
     let seller = await Seller.findOne({ phone });
 
     if (!seller) {
+      // create new seller
       seller = await Seller.create({
         phone,
         email,
@@ -43,8 +46,10 @@ const upsertSellerProfile = async (req, res) => {
         bank_name,
         account_number,
         ifsc_code,
+        // pending_payment and payout will use default 0 from schema
       });
     } else {
+      // update existing seller
       seller.phone = phone;
       seller.email = email || seller.email;
       seller.name = name;
@@ -78,6 +83,7 @@ const upsertSellerProfile = async (req, res) => {
   }
 };
 
+// GET /api/seller/:seller_id
 const getSellerProfile = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
@@ -103,6 +109,7 @@ const getSellerProfile = async (req, res) => {
   }
 };
 
+// GET /api/seller/:seller_id/products
 const getSellerProducts = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
@@ -122,10 +129,13 @@ const getSellerProducts = async (req, res) => {
   }
 };
 
+// GET /api/seller/:seller_id/orders
+// finds all orders that contain products of this seller
 const getSellerOrders = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
 
+    // all products of this seller
     const products = await Product.find({ seller_id });
     const productIds = products.map((p) => p.product_id);
 
@@ -137,6 +147,7 @@ const getSellerOrders = async (req, res) => {
       });
     }
 
+    // find orders that include any of these products
     const orders = await Order.find({
       "items.product_id": { $in: productIds },
     }).sort({ createdAt: -1 });
@@ -155,6 +166,7 @@ const getSellerOrders = async (req, res) => {
   }
 };
 
+// GET /api/admin/sellers
 const getAllSellers = async (req, res) => {
   try {
     const sellers = await Seller.find().sort({ createdAt: -1 });
@@ -173,6 +185,7 @@ const getAllSellers = async (req, res) => {
   }
 };
 
+// GET /api/admin/seller/:seller_id
 const getSellerByIdAdmin = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
@@ -198,6 +211,7 @@ const getSellerByIdAdmin = async (req, res) => {
   }
 };
 
+// DELETE /api/admin/seller/:seller_id
 const deleteSeller = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
@@ -210,6 +224,7 @@ const deleteSeller = async (req, res) => {
         .json({ success: false, message: "Seller not found" });
     }
 
+    // delete all products of this seller
     await Product.deleteMany({ seller_id });
 
     return res.status(200).json({
@@ -226,6 +241,7 @@ const deleteSeller = async (req, res) => {
   }
 };
 
+// PUT /api/admin/seller/:seller_id/approve
 const approveSeller = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
@@ -286,6 +302,7 @@ const rejectSeller = async (req, res) => {
   }
 };
 
+
 const getSellerByPhone = async (req, res) => {
   try {
     const phone = String(req.params.phone);
@@ -319,6 +336,45 @@ const getSellerByPhone = async (req, res) => {
   }
 };
 
+
+const updateSellerPayout = async (req, res) => {
+  try {
+    const seller_id = Number(req.params.seller_id);
+    const { pending_payment, payout } = req.body;
+
+    const seller = await Seller.findOne({ seller_id });
+
+    if (!seller) {
+      return res.status(404).json({
+        success: false,
+        message: "Seller not found",
+      });
+    }
+
+    if (pending_payment !== undefined) {
+      seller.pending_payment = Number(pending_payment);
+    }
+    if (payout !== undefined) {
+      seller.payout = Number(payout);
+    }
+
+    await seller.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Seller payout info updated",
+      data: seller,
+    });
+  } catch (error) {
+    console.error("Error updating seller payout:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   upsertSellerProfile,
   getSellerProfile,
@@ -330,4 +386,5 @@ module.exports = {
   approveSeller,
   rejectSeller,
   getSellerByPhone,
+  updateSellerPayout,
 };
