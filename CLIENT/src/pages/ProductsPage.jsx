@@ -13,9 +13,12 @@ import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 
+const api = import.meta.env.VITE_BACKEND_API;
+
 function ProductsPage({ openLoginModal }) {
   const { isAuthenticated, user, token } = useAuth();
   const navigate = useNavigate();
+  const { loadCartCount } = useCart();
 
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -28,8 +31,6 @@ function ProductsPage({ openLoginModal }) {
   const [maxPrice, setMaxPrice] = useState(0);
   const [priceFilter, setPriceFilter] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
-  const { loadCartCount } = useCart();
-  const api = import.meta.env.VITE_BACKEND_API;
 
   useEffect(() => {
     const getProducts = async () => {
@@ -43,6 +44,7 @@ function ProductsPage({ openLoginModal }) {
         setMaxPrice(max);
         setPriceFilter(max);
       } catch (error) {
+        console.error("Products fetch error:", error);
         toast.error("Failed to load products");
       } finally {
         setLoading(false);
@@ -147,6 +149,7 @@ function ProductsPage({ openLoginModal }) {
           : [...prev, product.product_id]
       );
     } catch (err) {
+      console.error("Wishlist error:", err);
       toast.error("Failed to update wishlist");
     }
   };
@@ -179,11 +182,12 @@ function ProductsPage({ openLoginModal }) {
 
       if (res.status >= 200 && res.status < 300) {
         toast.success("Added to cart");
-        loadCartCount();
+        loadCartCount?.();
       } else {
         toast.error(res.data?.message || "Failed to add to cart");
       }
     } catch (err) {
+      console.error("Add to cart error:", err);
       toast.error("Failed to add to cart");
     }
   };
@@ -203,20 +207,36 @@ function ProductsPage({ openLoginModal }) {
     );
   }
 
+  const resultsCount = filteredProducts.length;
+  const totalCount = products.length;
+
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-8 lg:py-10">
+        {/* Header */}
         <div className="flex flex-col gap-4 sm:gap-6 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-slate-500">
+              SwiftCart • Catalog
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
               All Products
             </h1>
             <p className="text-sm text-slate-600 mt-1">
-              Explore our curated collection of latest products.
+              Explore curated products from trusted sellers.{" "}
+              <span className="font-medium text-slate-800">
+                {resultsCount} result{resultsCount !== 1 ? "s" : ""}{" "}
+              </span>
+              {totalCount > 0 && (
+                <span className="text-slate-400 text-xs">
+                  (out of {totalCount})
+                </span>
+              )}
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            {/* Filter toggle */}
             <button
               onClick={() => setShowFilters((prev) => !prev)}
               className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50"
@@ -230,19 +250,19 @@ function ProductsPage({ openLoginModal }) {
               </span>
             </button>
 
-            <div className="flex items-center gap-2">
-              <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-slate-300"
-              >
-                <option value="popular">Sort: Popular</option>
-                <option value="price_low">Price: Low to High</option>
-                <option value="price_high">Price: High to Low</option>
-                <option value="newest">Newest First</option>
-              </select>
-            </div>
+            {/* Sort */}
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-slate-300"
+            >
+              <option value="popular">Sort: Popular</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+            </select>
 
+            {/* Search */}
             <div className="relative">
               <input
                 type="text"
@@ -265,11 +285,15 @@ function ProductsPage({ openLoginModal }) {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[260px,1fr]">
+          {/* Filters panel */}
           {showFilters && (
             <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4 h-fit">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-slate-900">
+                <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
                   Filters
+                  <span className="text-[10px] font-normal text-slate-400 uppercase tracking-[0.18em]">
+                    Refine
+                  </span>
                 </h2>
                 <button
                   onClick={() => {
@@ -284,6 +308,7 @@ function ProductsPage({ openLoginModal }) {
               </div>
 
               <div className="space-y-4">
+                {/* Category filter */}
                 <div>
                   <p className="text-xs font-semibold text-slate-700 mb-2">
                     Category
@@ -315,6 +340,7 @@ function ProductsPage({ openLoginModal }) {
                   </div>
                 </div>
 
+                {/* Brand filter */}
                 <div>
                   <p className="text-xs font-semibold text-slate-700 mb-2">
                     Brand
@@ -346,6 +372,7 @@ function ProductsPage({ openLoginModal }) {
                   </div>
                 </div>
 
+                {/* Price filter */}
                 <div>
                   <p className="text-xs font-semibold text-slate-700 mb-1">
                     Max Price
@@ -364,13 +391,14 @@ function ProductsPage({ openLoginModal }) {
                     max={maxPrice || 0}
                     value={priceFilter}
                     onChange={(e) => setPriceFilter(Number(e.target.value))}
-                    className="w-full"
+                    className="w-full accent-black"
                   />
                 </div>
               </div>
             </div>
           )}
 
+          {/* Products grid */}
           <div className={showFilters ? "" : "lg:col-span-2"}>
             {filteredProducts.length === 0 ? (
               <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-8 text-center">
@@ -394,68 +422,81 @@ function ProductsPage({ openLoginModal }) {
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredProducts.map((product) => (
-                  <div
-                    key={product.product_id}
-                    className="group rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all"
-                  >
-                    <div className="relative h-48 bg-white overflow-hidden">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-full w-full object-cover object-center transition duration-300 ease-out group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <button
-                        onClick={() => toggleWishlist(product)}
-                        className="absolute top-3 right-3 h-8 w-8 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-slate-500 hover:text-red-500 shadow-sm hover:shadow-md transition"
-                      >
-                        <Heart
-                          className={`h-4 w-4 ${
-                            wishlist.includes(product.product_id)
-                              ? "fill-red-500 text-red-500"
-                              : ""
-                          }`}
+                {filteredProducts.map((product) => {
+                  const imageSrc =
+                    product.image ||
+                    (product.images && product.images[0]) ||
+                    "https://via.placeholder.com/400x400?text=Product";
+
+                  return (
+                    <div
+                      key={product.product_id}
+                      className="group rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all"
+                    >
+                      <div className="relative h-48 bg-white overflow-hidden">
+                        <img
+                          src={imageSrc}
+                          alt={product.name}
+                          className="h-full w-full object-cover object-center transition duration-300 ease-out group-hover:scale-105"
+                          loading="lazy"
                         />
-                      </button>
-                    </div>
+                        <button
+                          onClick={() => toggleWishlist(product)}
+                          className="absolute top-3 right-3 h-8 w-8 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-slate-500 hover:text-red-500 shadow-sm hover:shadow-md transition"
+                        >
+                          <Heart
+                            className={`h-4 w-4 ${
+                              wishlist.includes(product.product_id)
+                                ? "fill-red-500 text-red-500"
+                                : ""
+                            }`}
+                          />
+                        </button>
+                      </div>
 
-                    <div className="flex flex-col p-4 flex-1">
-                      <p className="text-[11px] uppercase tracking-wide text-slate-400 mb-1">
-                        {product.brand || "Featured"}
-                      </p>
-                      <h2 className="text-sm font-semibold text-slate-900 line-clamp-2">
-                        {product.name}
-                      </h2>
-
-                      <div className="mt-2 flex items-center justify-between">
-                        <p className="text-base font-semibold text-slate-900">
-                          ₹{(product.price || 0).toLocaleString("en-IN")}
+                      <div className="flex flex-col p-4 flex-1">
+                        <p className="text-[11px] uppercase tracking-wide text-slate-400 mb-1">
+                          {product.brand || "Featured"}
                         </p>
-                        <div className="flex items-center gap-1 text-[11px] text-amber-500">
-                          <Star className="h-3 w-3 fill-amber-400" />
-                          <span>{product.rating || 4.5}</span>
+                        <h2 className="text-sm font-semibold text-slate-900 line-clamp-2">
+                          {product.name}
+                        </h2>
+
+                        <div className="mt-2 flex items-center justify-between">
+                          <p className="text-base font-semibold text-slate-900">
+                            ₹{(product.price || 0).toLocaleString("en-IN")}
+                          </p>
+                          <div className="flex items-center gap-1 text-[11px] text-amber-500">
+                            <Star className="h-3 w-3 fill-amber-400" />
+                            <span>{product.rating || 4.5}</span>
+                          </div>
+                        </div>
+
+                        {product.category && (
+                          <p className="mt-1 text-[11px] text-slate-500">
+                            {product.category}
+                          </p>
+                        )}
+
+                        <div className="mt-4 flex gap-2">
+                          <button
+                            onClick={() => handleAddToCart(product)}
+                            className="flex-1 flex items-center justify-center gap-2 rounded-full bg-black text-white px-3 py-2 text-xs font-medium hover:bg-slate-900"
+                          >
+                            <ShoppingBag className="h-4 w-4" />
+                            Add to Cart
+                          </button>
+                          <button
+                            onClick={() => handleViewProduct(product)}
+                            className="flex items-center justify-center rounded-full border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                          >
+                            View
+                          </button>
                         </div>
                       </div>
-
-                      <div className="mt-4 flex gap-2">
-                        <button
-                          onClick={() => handleAddToCart(product)}
-                          className="flex-1 flex items-center justify-center gap-2 rounded-full bg-black text-white px-3 py-2 text-xs font-medium hover:bg-slate-900"
-                        >
-                          <ShoppingBag className="h-4 w-4" />
-                          Add to Cart
-                        </button>
-                        <button
-                          onClick={() => handleViewProduct(product)}
-                          className="flex items-center justify-center rounded-full border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                        >
-                          View
-                        </button>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

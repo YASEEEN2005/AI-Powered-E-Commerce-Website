@@ -34,7 +34,14 @@ export default function OtpLogin({ onClose }) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
         "recaptcha-container",
-        { size: "invisible" }
+        {
+          size: "normal", 
+          callback: (response) => {
+          },
+          "expired-callback": () => {
+            toast.error("reCAPTCHA expired, please verify again.");
+          },
+        }
       );
     }
     return window.recaptchaVerifier;
@@ -60,9 +67,9 @@ export default function OtpLogin({ onClose }) {
     }
 
     setIsSending(true);
-    const appVerifier = setupRecaptcha();
 
     try {
+      const appVerifier = setupRecaptcha();
       const result = await signInWithPhoneNumber(
         auth,
         "+91" + phone,
@@ -75,6 +82,10 @@ export default function OtpLogin({ onClose }) {
     } catch (err) {
       console.error("OTP Error:", err);
       toast.error(err.message || "Failed to send OTP");
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+      }
     } finally {
       setIsSending(false);
     }
@@ -93,6 +104,33 @@ export default function OtpLogin({ onClose }) {
     }
   };
 
+  const checkExistingUser = async (phoneNumber) => {
+    try {
+      const res = await axios.get(`${api}/api/users/by-phone/${phoneNumber}`);
+
+      const existingUser =
+        res.data?.data || res.data?.user || res.data?.userData || null;
+
+      const token =
+        res.data?.token ||
+        res.data?.accessToken ||
+        res.data?.data?.token ||
+        null;
+
+      if (existingUser && token) {
+        login(existingUser, token);
+        toast.success("Welcome back 👋");
+
+        if (onClose) onClose();
+        navigate("/");
+        return true;
+      }
+    } catch (err) {
+      console.log("No existing user found for phone:", phoneNumber);
+    }
+    return false;
+  };
+
   const verifyOtp = async () => {
     const code = otp.join("");
     if (code.length !== 6) {
@@ -100,19 +138,31 @@ export default function OtpLogin({ onClose }) {
       return;
     }
 
+    if (!confirmation) {
+      toast.error("OTP session expired, please resend");
+      return;
+    }
+
     setIsVerifying(true);
     try {
       const data = await confirmation.confirm(code);
       const firebasePhone = data.user.phoneNumber || "";
+      const finalPhone = phone || firebasePhone.replace("+91", "");
+
       setUserPhone(firebasePhone);
 
       setUserForm((prev) => ({
         ...prev,
-        phone: phone || firebasePhone.replace("+91", ""),
+        phone: finalPhone,
       }));
 
       toast.success("OTP verified");
-      setStep("details");
+
+      const existed = await checkExistingUser(finalPhone);
+
+      if (!existed) {
+        setStep("details");
+      }
     } catch (err) {
       console.error("OTP verify error:", err);
       toast.error("Invalid OTP ❌");
@@ -199,46 +249,23 @@ export default function OtpLogin({ onClose }) {
 
   return (
     <div>
-      <div id="recaptcha-container" />
-
-      <div className="flex flex-col items-center mb-5">
-        <span className="text-xl font-black tracking-tight text-slate-900">
-          Swift<span className="font-light">Cart</span>
-        </span>
-        <p className="mt-1 text-xs text-slate-500">
-          Secure OTP login for your account
-        </p>
-      </div>
-
-      <div className="mb-4 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
-        <span
-          className={`h-1.5 w-6 rounded-full ${
-            step === "send" ||
-            step === "verify" ||
-            step === "details" ||
-            step === "success"
-              ? "bg-slate-900"
-              : "bg-slate-300"
-          }`}
-        />
-        <span
-          className={`h-1.5 w-6 rounded-full ${
-            step === "verify" || step === "details" || step === "success"
-              ? "bg-slate-900"
-              : "bg-slate-300"
-          }`}
-        />
-        <span
-          className={`h-1.5 w-6 rounded-full ${
-            step === "details" || step === "success"
-              ? "bg-slate-900"
-              : "bg-slate-300"
-          }`}
-        />
-      </div>
-
       {step === "send" && (
-        <>
+        <div className="mb-4">
+          <div className="mb-5 flex flex-col items-center">
+            <span className="text-xl font-black tracking-tight text-slate-900">
+              Swift<span className="font-light">Cart</span>
+            </span>
+            <p className="mt-1 text-xs text-slate-500">
+              Secure OTP login for your account
+            </p>
+          </div>
+
+          <div className="mb-4 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
+            <span className="h-1.5 w-6 rounded-full bg-slate-900" />
+            <span className="h-1.5 w-6 rounded-full bg-slate-300" />
+            <span className="h-1.5 w-6 rounded-full bg-slate-300" />
+          </div>
+
           <p className="text-xs text-slate-500 mb-4">
             Enter your mobile number to receive a one-time password.
           </p>
@@ -246,7 +273,7 @@ export default function OtpLogin({ onClose }) {
           <label className="block text-xs font-medium text-slate-700 mb-1.5">
             Phone Number
           </label>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-3">
             <span className="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
               +91
             </span>
@@ -259,6 +286,15 @@ export default function OtpLogin({ onClose }) {
             />
           </div>
 
+          <div className="mb-3 flex justify-center">
+            <div id="recaptcha-container" />
+          </div>
+          <p className="mb-4 text-[10px] text-slate-400 text-center leading-snug">
+            This site is protected by reCAPTCHA and the Google{" "}
+            <span className="underline">Privacy Policy</span> and{" "}
+            <span className="underline">Terms of Service</span> apply.
+          </p>
+
           <button
             onClick={sendOtp}
             disabled={isSending}
@@ -266,11 +302,26 @@ export default function OtpLogin({ onClose }) {
           >
             {isSending ? "Sending OTP..." : "Send OTP"}
           </button>
-        </>
+        </div>
       )}
 
       {step === "verify" && (
         <>
+          <div className="flex flex-col items-center mb-4">
+            <span className="text-xl font-black tracking-tight text-slate-900">
+              Swift<span className="font-light">Cart</span>
+            </span>
+            <p className="mt-1 text-xs text-slate-500">
+              Verify your OTP to continue
+            </p>
+          </div>
+
+          <div className="mb-4 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
+            <span className="h-1.5 w-6 rounded-full bg-slate-900" />
+            <span className="h-1.5 w-6 rounded-full bg-slate-900" />
+            <span className="h-1.5 w-6 rounded-full bg-slate-300" />
+          </div>
+
           <p className="text-xs text-slate-600 mb-3 text-center">
             Enter the 6-digit code sent to{" "}
             <span className="font-semibold">+91 {phone}</span>
@@ -315,9 +366,20 @@ export default function OtpLogin({ onClose }) {
 
       {step === "details" && (
         <form onSubmit={submitUserDetails} className="space-y-3">
-          <p className="text-xs text-slate-600 mb-2">
-            Complete your profile to continue. All fields are required.
-          </p>
+          <div className="flex flex-col items-center mb-3">
+            <span className="text-xl font-black tracking-tight text-slate-900">
+              Swift<span className="font-light">Cart</span>
+            </span>
+            <p className="mt-1 text-xs text-slate-500">
+              Complete your profile to continue
+            </p>
+          </div>
+
+          <div className="mb-3 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
+            <span className="h-1.5 w-6 rounded-full bg-slate-900" />
+            <span className="h-1.5 w-6 rounded-full bg-slate-900" />
+            <span className="h-1.5 w-6 rounded-full bg-slate-900" />
+          </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-slate-700">Name</label>

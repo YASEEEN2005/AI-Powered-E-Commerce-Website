@@ -133,10 +133,54 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// FIND USER BY PHONE – GET /by-phone/:phone
+const getUserByPhone = async (req, res) => {
+  try {
+    const phone = Number(req.params.phone);
+
+    if (!phone) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Phone number is required" });
+    }
+
+    const user = await User.findOne({ phone });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const jwt = require("jsonwebtoken");
+    const token = jwt.sign(
+      { user_id: user.user_id, phone: user.phone },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "User found",
+      data: user,
+      token
+    });
+  } catch (error) {
+    console.error("Error finding user by phone:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserByPhone
 };

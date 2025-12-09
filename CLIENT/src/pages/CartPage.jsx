@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { Minus, Plus, Trash2, ArrowLeft, Loader2 } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
@@ -102,44 +102,54 @@ function CartPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-semibold mb-4">Your Cart</h1>
-        <p className="text-slate-600 mb-6">
-          Please log in to view and manage your cart.
-        </p>
-        <button
-          onClick={() => navigate("/")}
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-6 py-2 text-sm font-medium shadow-sm hover:bg-slate-50"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Shopping
-        </button>
+      <div className="bg-slate-50 min-h-[calc(100vh-64px)] flex items-center">
+        <div className="max-w-md mx-auto px-4 py-12 text-center rounded-2xl bg-white shadow-sm border border-slate-100">
+          <h1 className="text-xl font-semibold mb-2 text-slate-900">Your Cart</h1>
+          <p className="text-slate-600 text-sm mb-6">
+            Please log in to view and manage your cart items.
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-6 py-2 text-xs font-medium shadow-sm hover:bg-slate-50"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Shopping
+          </button>
+        </div>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-slate-600 mb-3" />
-        <p className="text-slate-600 text-sm">Loading your cart...</p>
+      <div className="bg-slate-50 min-h-[calc(100vh-64px)] flex flex-col items-center justify-center">
+        <div className="rounded-full border border-slate-200 bg-white px-4 py-3 shadow-sm flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin text-slate-700" />
+          <p className="text-slate-700 text-xs font-medium">
+            Loading your cart...
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-semibold mb-2">Your Cart is Empty</h1>
-        <p className="text-slate-600 mb-6">
-          Looks like you haven&apos;t added anything to your cart yet.
-        </p>
-        <Link
-          to="/products"
-          className="inline-flex items-center gap-2 rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-slate-900"
-        >
-          Start Shopping
-        </Link>
+      <div className="bg-slate-50 min-h-[calc(100vh-64px)] flex items-center">
+        <div className="max-w-md mx-auto px-4 py-12 text-center rounded-2xl bg-white shadow-sm border border-slate-100">
+          <h1 className="text-xl font-semibold mb-2 text-slate-900">
+            Your Cart is Empty
+          </h1>
+          <p className="text-slate-600 text-sm mb-6">
+            Looks like you haven&apos;t added anything to your cart yet.
+          </p>
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 rounded-full bg-slate-900 text-white px-6 py-2 text-xs font-medium hover:bg-black shadow-sm"
+          >
+            Start Shopping
+          </Link>
+        </div>
       </div>
     );
   }
@@ -152,34 +162,38 @@ function CartPage() {
   const total = cart.totalAmount ?? subtotal + gst + platformFee;
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        <div className="flex items-center justify-between mb-8">
+    <div className="bg-slate-50 min-h-[calc(100vh-64px)]">
+      <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
+        <div className="mb-6 flex items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500">
+              Cart
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
               Your Cart
             </h1>
-            <p className="text-sm text-slate-600 mt-1">
+            <p className="text-xs text-slate-600 mt-1">
               {itemCount} item{itemCount !== 1 ? "s" : ""} in your cart
             </p>
           </div>
           <Link
             to="/products"
-            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-medium shadow-sm hover:bg-slate-50"
+            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-[11px] font-medium shadow-sm bg-white hover:bg-slate-50"
           >
             <ArrowLeft className="h-4 w-4" />
             Continue Shopping
           </Link>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-[2fr,1fr]">
+        <div className="grid gap-6 md:gap-8 md:grid-cols-[2fr,1fr]">
+          {/* Left: Cart items */}
           <div className="space-y-4">
             {cart.items.map((item) => (
               <div
                 key={item.product_id}
-                className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm border border-slate-100"
+                className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm border border-slate-100 hover:border-slate-200 transition"
               >
-                <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -190,10 +204,10 @@ function CartPage() {
                 <div className="flex flex-1 flex-col justify-between">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h2 className="text-sm sm:text-base font-semibold text-slate-900">
+                      <h2 className="text-sm sm:text-[15px] font-semibold text-slate-900">
                         {item.name}
                       </h2>
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-[11px] text-slate-500">
                         Product ID: {item.product_id}
                       </p>
                     </div>
@@ -206,9 +220,9 @@ function CartPage() {
                     </button>
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between">
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500">Qty</span>
+                      <span className="text-[11px] text-slate-500">Quantity</span>
                       <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1">
                         <button
                           onClick={() =>
@@ -225,7 +239,7 @@ function CartPage() {
                         >
                           <Minus className="h-3 w-3" />
                         </button>
-                        <span className="mx-2 text-xs font-medium">
+                        <span className="mx-2 text-xs font-medium text-slate-900">
                           {item.quantity}
                         </span>
                         <button
@@ -258,17 +272,24 @@ function CartPage() {
 
             <Link
               to="/products"
-              className="mt-2 inline-flex items-center gap-2 text-xs font-medium text-slate-600 hover:text-slate-900"
+              className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 hover:text-slate-900"
             >
               <ArrowLeft className="h-4 w-4" />
               Continue shopping
             </Link>
           </div>
 
+          {/* Right: Order Summary */}
           <div className="h-fit rounded-2xl bg-white p-5 shadow-sm border border-slate-100">
-            <h2 className="text-sm font-semibold text-slate-900 mb-4">
-              Order Summary
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold text-slate-900">
+                Order Summary
+              </h2>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-medium text-emerald-700 border border-emerald-100">
+                <ShieldCheck className="h-3 w-3" />
+                Secure Checkout
+              </span>
+            </div>
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -304,13 +325,14 @@ function CartPage() {
 
             <button
               onClick={() => navigate("/order-summary")}
-              className="mt-5 w-full rounded-full bg-black text-white py-2.5 text-sm font-medium hover:bg-slate-900 disabled:opacity-50"
+              className="mt-5 w-full rounded-full bg-slate-900 text-white py-2.5 text-sm font-medium hover:bg-black disabled:opacity-50 shadow-sm"
             >
               Proceed to Checkout
             </button>
 
-            <p className="mt-2 text-[11px] text-slate-500 text-center">
-              Taxes and discounts are included based on your current cart.
+            <p className="mt-2 text-[11px] text-slate-500 text-center leading-snug">
+              Taxes, platform fee and discounts (if any) are calculated based on
+              your current cart.
             </p>
           </div>
         </div>

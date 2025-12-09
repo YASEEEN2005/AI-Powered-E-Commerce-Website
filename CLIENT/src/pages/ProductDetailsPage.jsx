@@ -20,33 +20,35 @@ import { useAuth } from "../context/AuthContext";
 import SimilarProducts from "./SimilarProducts";
 import { useCart } from "../context/CartContext";
 
+const api = import.meta.env.VITE_BACKEND_API;
+
 function ProductDetailsPage({ openLoginModal }) {
   const { product_id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated, user, token } = useAuth();
+  const { loadCartCount } = useCart();
 
   const [product, setProduct] = useState(null);
   const [wishlistActive, setWishlistActive] = useState(false);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const { loadCartCount } = useCart();
-  const api = import.meta.env.VITE_BACKEND_API;
 
+  // Fetch product
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const headers = {};
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
+        if (token) headers.Authorization = `Bearer ${token}`;
 
         const res = await axios.get(`${api}/api/products/${product_id}`, {
           headers,
         });
+
         const data = res.data.data;
-        setProduct(data);
+        setProduct(data || null);
       } catch (err) {
+        console.error("Product fetch error:", err);
         toast.error("Failed to load product");
       } finally {
         setLoading(false);
@@ -56,6 +58,7 @@ function ProductDetailsPage({ openLoginModal }) {
     fetchProduct();
   }, [product_id, token]);
 
+  // Images list
   const images = useMemo(() => {
     if (!product) return [];
     if (Array.isArray(product.images) && product.images.length > 0) {
@@ -65,6 +68,7 @@ function ProductDetailsPage({ openLoginModal }) {
     return [];
   }, [product]);
 
+  // Reset selected image when product changes
   useEffect(() => {
     setSelectedImageIndex(0);
   }, [product]);
@@ -84,7 +88,7 @@ function ProductDetailsPage({ openLoginModal }) {
 
     if (!isAuthenticated) {
       toast.info("Please login to use wishlist");
-      if (openLoginModal) openLoginModal();
+      openLoginModal && openLoginModal();
       return;
     }
 
@@ -112,6 +116,7 @@ function ProductDetailsPage({ openLoginModal }) {
         wishlistActive ? "Removed from wishlist" : "Added to wishlist"
       );
     } catch (err) {
+      console.error("Wishlist error:", err);
       toast.error("Failed to update wishlist");
     }
   };
@@ -121,7 +126,7 @@ function ProductDetailsPage({ openLoginModal }) {
 
     if (!isAuthenticated) {
       toast.info("Please login to use cart");
-      if (openLoginModal) openLoginModal();
+      openLoginModal && openLoginModal();
       return;
     }
 
@@ -146,11 +151,12 @@ function ProductDetailsPage({ openLoginModal }) {
 
       if (res.status >= 200 && res.status < 300) {
         toast.success("Added to cart");
-        loadCartCount();
+        loadCartCount?.();
       } else {
         toast.error(res.data?.message || "Failed to add to cart");
       }
     } catch (err) {
+      console.error("Cart error:", err);
       toast.error("Failed to add to cart");
     }
   };
@@ -160,7 +166,7 @@ function ProductDetailsPage({ openLoginModal }) {
 
     if (!isAuthenticated) {
       toast.info("Please login to continue");
-      if (openLoginModal) openLoginModal();
+      openLoginModal && openLoginModal();
       return;
     }
 
@@ -189,6 +195,7 @@ function ProductDetailsPage({ openLoginModal }) {
         toast.error(res.data?.message || "Failed to proceed");
       }
     } catch (err) {
+      console.error("Buy now error:", err);
       toast.error("Failed to proceed");
     }
   };
@@ -280,9 +287,37 @@ function ProductDetailsPage({ openLoginModal }) {
   const inStock = product.stock == null ? true : product.stock > 0;
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 py-6 lg:py-8">
-        <div className="mb-3 text-[11px] text-slate-500 flex items-center gap-1">
+    <div className="bg-slate-50 min-h-screen pb-8">
+      <div className="max-w-6xl mx-auto px-4 pt-4 lg:pt-6">
+        {/* Top bar: back + breadcrumb */}
+        <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back
+          </button>
+
+          <div className="hidden sm:flex items-center gap-1 text-[11px] text-slate-500">
+            <Link to="/" className="hover:underline">
+              Home
+            </Link>
+            <span>/</span>
+            <Link to="/products" className="hover:underline">
+              Products
+            </Link>
+            {product.category && (
+              <>
+                <span>/</span>
+                <span>{product.category}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Small breadcrumb for mobile */}
+        <div className="sm:hidden mb-3 text-[11px] text-slate-500 flex items-center gap-1">
           <Link to="/" className="hover:underline">
             Home
           </Link>
@@ -290,28 +325,26 @@ function ProductDetailsPage({ openLoginModal }) {
           <Link to="/products" className="hover:underline">
             Products
           </Link>
-          {product.category && (
-            <>
-              <span>/</span>
-              <span>{product.category}</span>
-            </>
-          )}
           <span>/</span>
-          <span className="text-slate-700 line-clamp-1">{product.name}</span>
+          <span className="line-clamp-1 text-slate-700">{product.name}</span>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.1fr,1.4fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.05fr,1.45fr]">
           <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4 flex flex-col gap-4">
             <div className="grid grid-cols-[72px,1fr] gap-3">
-              <div className="flex flex-col gap-2 max-h-72 overflow-y-auto"></div>
+              
 
               <div className="relative rounded-2xl bg-slate-50 flex items-center justify-center h-72 sm:h-80 overflow-hidden">
-                {images[selectedImageIndex] && (
+                {images[selectedImageIndex] ? (
                   <img
                     src={images[selectedImageIndex]}
                     alt={product.name}
                     className="max-h-full max-w-full object-contain transition-transform duration-300 ease-out"
                   />
+                ) : (
+                  <span className="text-xs text-slate-400">
+                    Image not available
+                  </span>
                 )}
 
                 {images.length > 1 && (
@@ -370,14 +403,14 @@ function ProductDetailsPage({ openLoginModal }) {
 
           <div className="space-y-4">
             <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4 sm:p-5">
-              <p className="text-[11px] uppercase tracking-wide text-slate-400 mb-1">
-                {product.brand || "Featured"}
+              <p className="text-[11px] uppercase tracking-[0.22em] text-slate-400 mb-1">
+                {product.brand || "Featured Product"}
               </p>
               <h1 className="text-lg sm:text-xl font-semibold text-slate-900 leading-snug">
                 {product.name}
               </h1>
               {product.description && (
-                <p className="mt-1 text-xs text-slate-600">
+                <p className="mt-1 text-xs text-slate-600 line-clamp-3">
                   {product.description}
                 </p>
               )}
@@ -441,11 +474,12 @@ function ProductDetailsPage({ openLoginModal }) {
                 </div>
               </div>
 
+              {/* Quantity + buttons */}
               <div className="mt-5 flex flex-wrap items-center gap-4">
                 <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1">
                   <button
                     onClick={handleDecreaseQty}
-                    className="h-6 w-6 flex items-center justify-center rounded-full hover:bg-slate-100"
+                    className="h-6 w-6 flex items-center justify-center rounded-full hover:bg-slate-100 disabled:opacity-40"
                     disabled={quantity <= 1}
                   >
                     -
@@ -479,6 +513,7 @@ function ProductDetailsPage({ openLoginModal }) {
               </div>
             </div>
 
+            {/* Product details */}
             <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4 sm:p-5">
               <h2 className="text-sm font-semibold text-slate-900 mb-3">
                 Product Details
@@ -529,6 +564,7 @@ function ProductDetailsPage({ openLoginModal }) {
               </div>
             </div>
 
+            {/* Highlights */}
             <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4 sm:p-5">
               <h2 className="text-sm font-semibold text-slate-900 mb-2">
                 Highlights
@@ -550,6 +586,8 @@ function ProductDetailsPage({ openLoginModal }) {
             </div>
           </div>
         </div>
+
+        {/* Similar products */}
         <SimilarProducts
           category={product.category}
           currentProductId={product.product_id}

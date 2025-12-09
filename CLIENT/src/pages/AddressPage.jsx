@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { MapPin, Plus } from "lucide-react";
 
 const api = import.meta.env.VITE_BACKEND_API;
 
@@ -147,90 +148,115 @@ function AddressPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-6 md:py-10">
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-[calc(100vh-64px)] bg-slate-50">
+      <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 md:mb-8">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-              Manage Addresses
+            <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500">
+              Account
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span>Manage Addresses</span>
+              <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-slate-900/5 px-2 py-0.5 text-[10px] font-medium text-slate-700 border border-slate-200/80">
+                <MapPin className="h-3 w-3" />
+                Delivery locations
+              </span>
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Save your delivery locations for faster checkout
+            <p className="text-xs md:text-sm text-slate-600 mt-1">
+              Save your delivery locations for a faster checkout experience.
             </p>
           </div>
           <button
             onClick={resetForm}
-            className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-900 transition"
+            className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-xs font-medium hover:bg-black shadow-sm"
           >
-            + Add New Address
+            <Plus className="h-4 w-4" />
+            Add New Address
           </button>
         </div>
 
         {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs md:text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-5">
+        {/* Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-7">
+          {/* Saved addresses */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Saved Addresses</h3>
+              <div>
+                <h3 className="text-sm md:text-base font-semibold text-slate-900">
+                  Saved Addresses
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  Select or edit your existing delivery locations
+                </p>
+              </div>
               <button
                 onClick={resetForm}
-                className="md:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-black text-white text-xs font-medium"
+                className="md:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-medium"
               >
-                + Add New
+                <Plus className="h-3 w-3" />
+                Add New
               </button>
             </div>
 
             {loading ? (
-              <p className="text-sm text-gray-500">Loading addresses...</p>
+              <p className="text-xs md:text-sm text-slate-500">
+                Loading addresses...
+              </p>
             ) : addresses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-center">
-                <div className="w-12 h-12 rounded-full border border-dashed border-gray-300 flex items-center justify-center mb-3">
-                  <span className="text-xl">📍</span>
+                <div className="w-12 h-12 rounded-full border border-dashed border-slate-300 flex items-center justify-center mb-3 bg-slate-50">
+                  <MapPin className="h-5 w-5 text-slate-500" />
                 </div>
-                <p className="text-sm text-gray-600 mb-1">
+                <p className="text-sm text-slate-700 mb-1">
                   You haven&apos;t added any address yet.
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Add a delivery address to speed up checkout.
                 </p>
                 <button
                   onClick={resetForm}
-                  className="mt-2 px-4 py-1.5 text-xs rounded-full border border-gray-300 hover:border-black hover:text-black transition"
+                  className="mt-3 px-4 py-1.5 text-[11px] rounded-full border border-slate-300 hover:border-slate-900 hover:text-slate-900 transition bg-white"
                 >
                   Add your first address
                 </button>
               </div>
             ) : (
-              <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
-                {addresses.map((addr) => (
+              <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1 custom-scrollbar">
+                {addresses.map((addr, index) => (
                   <div
                     key={addr._id}
-                    className="border border-gray-100 rounded-xl px-4 py-3 hover:border-black hover:shadow-sm transition flex justify-between gap-4"
+                    className="border border-slate-100 rounded-xl px-4 py-3 hover:border-slate-900/50 hover:shadow-sm transition flex justify-between gap-4 bg-white"
                   >
-                    <div className="space-y-1 text-sm">
-                      <div className="flex items-center gap-2">
-                        <p className="font-semibold text-gray-900">
+                    <div className="space-y-1 text-xs md:text-sm">
+                      <div className="flex items-center flex-wrap gap-2">
+                        <p className="font-semibold text-slate-900">
                           {addr.fullName}
                         </p>
-                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 uppercase tracking-wide">
-                          Home
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase tracking-[0.12em]">
+                          {index === 0 ? "Default" : "Saved"}
                         </span>
                       </div>
-                      <p className="text-gray-700">
+                      <p className="text-slate-700">
                         {addr.houseNo}, {addr.roadName}
                       </p>
-                      <p className="text-gray-700">
+                      <p className="text-slate-700">
                         {addr.city}, {addr.state} - {addr.pinCode}
                       </p>
-                      <p className="text-gray-500">
-                        Phone: <span className="font-medium">{addr.phone}</span>
+                      <p className="text-slate-500">
+                        Phone:{" "}
+                        <span className="font-medium">{addr.phone}</span>
                       </p>
                     </div>
-                    <div className="flex flex-col items-end gap-2 text-xs min-w-[84px]">
+                    <div className="flex flex-col items-end gap-2 text-[11px] min-w-[92px]">
                       <button
                         onClick={() => handleEdit(addr)}
-                        className="px-3 py-1 rounded-full border border-gray-300 hover:border-black hover:text-black transition"
+                        className="px-3 py-1 rounded-full border border-slate-300 text-slate-700 hover:border-slate-900 hover:text-slate-900 hover:bg-slate-50 transition"
                       >
                         Edit
                       </button>
@@ -248,15 +274,21 @@ function AddressPage() {
             )}
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-5">
+          {/* Form */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-semibold">
-                {isEditing ? "Edit Address" : "Add New Address"}
-              </h3>
+              <div>
+                <h3 className="text-sm md:text-base font-semibold text-slate-900">
+                  {isEditing ? "Edit Address" : "Add New Address"}
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  All fields are required for delivery.
+                </p>
+              </div>
               {isEditing && (
                 <button
                   onClick={resetForm}
-                  className="text-xs text-gray-500 hover:text-black underline underline-offset-4"
+                  className="text-[11px] text-slate-500 hover:text-slate-900 underline underline-offset-4"
                 >
                   Clear
                 </button>
@@ -264,7 +296,7 @@ function AddressPage() {
             </div>
 
             {formError && (
-              <p className="mb-3 text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+              <p className="mb-3 text-[11px] md:text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
                 {formError}
               </p>
             )}
@@ -272,19 +304,19 @@ function AddressPage() {
             <form onSubmit={handleSubmit} className="space-y-3 text-sm">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-600 mb-1">
                     Full Name<span className="text-red-500"> *</span>
                   </label>
                   <input
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    placeholder="Eg: Muhammad Yaseen"
-                    className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                    placeholder="Eg: John Doe"
+                    className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-600 mb-1">
                     Mobile Number<span className="text-red-500"> *</span>
                   </label>
                   <input
@@ -292,14 +324,14 @@ function AddressPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="10 digit mobile number"
-                    className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                    className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-600 mb-1">
                     Pincode<span className="text-red-500"> *</span>
                   </label>
                   <input
@@ -307,11 +339,11 @@ function AddressPage() {
                     value={formData.pinCode}
                     onChange={handleChange}
                     placeholder="Eg: 682024"
-                    className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                    className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-600 mb-1">
                     State<span className="text-red-500"> *</span>
                   </label>
                   <input
@@ -319,11 +351,11 @@ function AddressPage() {
                     value={formData.state}
                     onChange={handleChange}
                     placeholder="Kerala"
-                    className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                    className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-600 mb-1">
                     City<span className="text-red-500"> *</span>
                   </label>
                   <input
@@ -331,13 +363,13 @@ function AddressPage() {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="Ernakulam"
-                    className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                    className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-[11px] font-medium text-slate-600 mb-1">
                   House / Flat No<span className="text-red-500"> *</span>
                 </label>
                 <input
@@ -345,12 +377,12 @@ function AddressPage() {
                   value={formData.houseNo}
                   onChange={handleChange}
                   placeholder="House / Flat / Building"
-                  className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                  className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-[11px] font-medium text-slate-600 mb-1">
                   Road / Area / Street<span className="text-red-500"> *</span>
                 </label>
                 <input
@@ -358,7 +390,7 @@ function AddressPage() {
                   value={formData.roadName}
                   onChange={handleChange}
                   placeholder="Road name, area, landmark"
-                  className="w-full border border-gray-200 focus:border-black rounded-lg px-3 py-2 outline-none text-sm bg-gray-50 focus:bg-white transition"
+                  className="w-full border border-slate-200 focus:border-slate-900 rounded-lg px-3 py-2 outline-none text-sm bg-slate-50 focus:bg-white transition"
                 />
               </div>
 
@@ -366,7 +398,7 @@ function AddressPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-900 disabled:opacity-70 transition"
+                  className="flex-1 inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-slate-900 text-white text-sm font-medium tracking-wide hover:bg-black disabled:opacity-70 transition shadow-sm"
                 >
                   {saving
                     ? "Saving..."
@@ -378,7 +410,7 @@ function AddressPage() {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-4 py-2 rounded-full border border-gray-300 text-xs font-medium hover:border-black hover:text-black transition"
+                    className="px-4 py-2 rounded-full border border-slate-300 text-[11px] font-medium hover:border-slate-900 hover:text-slate-900 transition bg-white"
                   >
                     Cancel
                   </button>
