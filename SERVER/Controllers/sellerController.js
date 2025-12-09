@@ -1,10 +1,9 @@
-const Seller = require("./Models/Seller");
-const Product = require("./Models/Product");
-const Order = require("./Models/Order");
-const { generateToken } = require("./Middleware/authMiddleware");
+const Seller = require("../Models/Seller");
+const Product = require("../Models/Product");
+const Order = require("../Models/Order");
+const { generateToken } = require("../Middleware/authMiddleware");
 
 // POST /api/seller/profile
-// create or update seller by phone, return token
 const upsertSellerProfile = async (req, res) => {
   try {
     const {
@@ -36,7 +35,7 @@ const upsertSellerProfile = async (req, res) => {
     let seller = await Seller.findOne({ phone });
 
     if (!seller) {
-      // create new seller
+
       seller = await Seller.create({
         phone,
         email,
@@ -46,10 +45,8 @@ const upsertSellerProfile = async (req, res) => {
         bank_name,
         account_number,
         ifsc_code,
-        // pending_payment and payout will use default 0 from schema
       });
     } else {
-      // update existing seller
       seller.phone = phone;
       seller.email = email || seller.email;
       seller.name = name;
@@ -135,7 +132,6 @@ const getSellerOrders = async (req, res) => {
   try {
     const seller_id = Number(req.params.seller_id);
 
-    // all products of this seller
     const products = await Product.find({ seller_id });
     const productIds = products.map((p) => p.product_id);
 
@@ -147,7 +143,6 @@ const getSellerOrders = async (req, res) => {
       });
     }
 
-    // find orders that include any of these products
     const orders = await Order.find({
       "items.product_id": { $in: productIds },
     }).sort({ createdAt: -1 });

@@ -25,14 +25,12 @@ function SellerPayout() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [payoutLoading, setPayoutLoading] = useState(false);
 
-  // If no token, go back to seller login
   useEffect(() => {
     if (!sellerToken) {
       navigate("/seller");
     }
   }, [sellerToken, navigate]);
 
-  // Fetch seller profile (includes pending_payment + payout)
   const fetchProfile = async () => {
     if (!seller?.seller_id || !sellerToken) {
       setLoadingProfile(false);
@@ -60,7 +58,6 @@ function SellerPayout() {
     fetchProfile();
   }, [seller?.seller_id, sellerToken]);
 
-  // Fetch seller-related orders (to show recent paid orders, etc.)
   useEffect(() => {
     const fetchOrders = async () => {
       if (!seller?.seller_id || !sellerToken) {
@@ -92,7 +89,7 @@ function SellerPayout() {
   const pendingPayment = Number(data.pending_payment || 0);
   const totalPayout = Number(data.payout || 0);
 
-  // Example: compute last 5 fully paid & delivered orders for list
+
   const recentPaidOrders = useMemo(() => {
     return (orders || [])
       .filter(
@@ -122,7 +119,7 @@ function SellerPayout() {
       })
     : "-";
 
-  //  Connect to payout controller
+
   const handlePayoutNow = async () => {
     if (!seller?.seller_id) {
       toast.error("Seller info missing.");
@@ -144,9 +141,8 @@ function SellerPayout() {
     try {
       setPayoutLoading(true);
 
-      // NOTE: This is using admin payout endpoint.
-      // In production, keep this behind adminAuth or change to a "payout request" endpoint.
-      const res = await axios.post(
+   
+      const res = await axios.put(
         `${api}/api/admin/seller/${seller.seller_id}/payout`,
         { amount: pendingPayment },
         {
@@ -304,7 +300,6 @@ function SellerPayout() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-slate-900">

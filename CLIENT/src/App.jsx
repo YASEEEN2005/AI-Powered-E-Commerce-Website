@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,23 +23,24 @@ import OrderDetailsPage from "./pages/OrderDetailsPage";
 import SellerRouters from "./Routers/SellerRouters";
 
 import ProtectedRoute from "./componets/ProtectedRoute";
-import SellerApprovalStatus from "./Seller/SellerApprovalStatus";
-import SellerDashboard from "./Seller/SellerDashboard";
+import AdminRouters from "./Routers/AdminRouters"; // ⬅️ import this
 
 function AppInner() {
   const location = useLocation();
 
   const isSellerRoute = location.pathname.startsWith("/seller");
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
   return (
     <>
-      {!isSellerRoute && <Navbar />}
+      {!isSellerRoute && !isAdminRoute && <Navbar />}
 
       <Routes>
+        {/* Admin routes */}
+        <Route path="/admin/*" element={<AdminRouters />} />
+
         {/* Seller-side */}
         <Route path="/seller/*" element={<SellerRouters />} />
-        {/* <Route path="/seller" element={<SellerRouters />} /> */}
-        {/* <Route path="/seller/dashboard" element={<SellerDashboard />} /> */}
 
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />
