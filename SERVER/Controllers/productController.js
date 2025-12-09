@@ -43,7 +43,6 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const {
-      product_id,
       seller_id,
       name,
       category,
@@ -56,7 +55,6 @@ const createProduct = async (req, res) => {
     } = req.body;
 
     if (
-      !product_id ||
       !seller_id ||
       !name ||
       !category ||
@@ -71,7 +69,6 @@ const createProduct = async (req, res) => {
     }
 
     const product = await Product.create({
-      product_id,
       seller_id,
       name,
       category,

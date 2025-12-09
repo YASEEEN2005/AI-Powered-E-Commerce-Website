@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const productSchema = new mongoose.Schema(
   {
-    product_id: { type: Number, required: true, unique: true },
-    seller_id: { type: Number, required: true }, 
+    product_id: { type: Number, unique: true },
+    seller_id: { type: Number, required: true },
     name: { type: String, required: true },
     category: { type: String, required: true },
     description: { type: String, required: true },
@@ -15,5 +16,11 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+productSchema.plugin(AutoIncrement, {
+  id: "product_id_counter",
+  inc_field: "product_id",
+  start_seq: 1,
+});
 
 module.exports = mongoose.model("Product", productSchema);

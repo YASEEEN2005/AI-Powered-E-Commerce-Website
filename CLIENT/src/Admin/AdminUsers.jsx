@@ -167,20 +167,23 @@ function AdminUsers() {
   };
 
   return (
-    <div className="w-full ">
+    <div className="min-h-[calc(100vh-64px)] bg-slate-50">
       <div className="max-w-[1300px] mx-auto px-4 md:px-6 py-5 md:py-6">
         <div className="mb-4 md:mb-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              Users Overview
+            </p>
             <h2 className="text-lg md:text-xl font-semibold text-slate-900">
-              Users
+              Customers on SwiftCart
             </h2>
             <p className="text-sm text-slate-500 mt-1">
-              View customer list and inspect their orders.
+              View customer list and inspect their order history.
             </p>
           </div>
 
-          <div className="w-full md:w-72">
-            <div className="relative">
+          <div className="flex flex-col items-start md:items-end gap-2">
+            <div className="relative w-full md:w-72">
               <input
                 type="text"
                 value={search}
@@ -193,14 +196,16 @@ function AdminUsers() {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
               />
             </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-medium text-slate-700 shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              {filtered.length} users in view
+            </div>
           </div>
         </div>
 
         <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-medium text-slate-900">
-              All Users
-            </p>
+            <p className="text-sm font-medium text-slate-900">All Users</p>
             <span className="text-[11px] text-slate-500">
               {filtered.length} records
             </span>
@@ -240,7 +245,9 @@ function AdminUsers() {
                       className="border-b border-slate-100 last:border-0 hover:bg-slate-50/60"
                     >
                       <td className="py-2 pr-3 text-slate-800">
-                        {user.user_id || user.id || String(user._id).slice(-6)}
+                        {user.user_id ||
+                          user.id ||
+                          String(user._id || "").slice(-6)}
                       </td>
                       <td className="py-2 pr-3 text-slate-800">
                         {user.name || "-"}
@@ -265,9 +272,7 @@ function AdminUsers() {
               </table>
             </div>
           ) : (
-            <p className="text-xs text-slate-500">
-              No users found.
-            </p>
+            <p className="text-xs text-slate-500">No users found.</p>
           )}
         </div>
       </div>
@@ -298,7 +303,7 @@ function AdminUsers() {
                   ID:{" "}
                   {selectedUser.user_id ||
                     selectedUser.id ||
-                    String(selectedUser._id).slice(-6)}
+                    String(selectedUser._id || "").slice(-6)}
                 </p>
               </div>
             </div>
@@ -350,7 +355,7 @@ function AdminUsers() {
                         <div className="flex items-center justify-between mb-2">
                           <div>
                             <p className="text-xs font-medium text-slate-900">
-                              Order #{o.order_id || String(o._id).slice(-6)}
+                              Order #{o.order_id || String(o._id || "").slice(-6)}
                             </p>
                             <p className="text-[11px] text-slate-500">
                               Amount: ₹

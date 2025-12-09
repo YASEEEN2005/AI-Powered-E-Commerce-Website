@@ -1,4 +1,3 @@
-// src/Routers/AdminRouters.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -7,13 +6,18 @@ import AdminDashboard from "../Admin/AdminDashboard";
 import AdminTopNav from "../Admin/AdminTopNav";
 import AdminRoute from "../componets/AdminRoute";
 import AdminUsers from "../Admin/AdminUsers";
+import AdminSellers from "../Admin/AdminSellers";
+import AdminSellerDetails from "../Admin/AdminSellerDetails";
+import AdminProducts from "../Admin/AdminProducts";
+import AdminOrders from "../Admin/AdminOrders";
+import AdminPayments from "../Admin/AdminPayments";
+import AdminRevenue from "../Admin/AdminRevenue";
 
 function AdminRouters() {
   return (
     <Routes>
       <Route path="" element={<AdminLogin />} />
 
-      {/* Protected wrapper */}
       <Route element={<AdminRoute />}>
         <Route
           path="dashboard"
@@ -25,14 +29,74 @@ function AdminRouters() {
           }
         />
         <Route
-        path="users"
-        element={
-          // <AdminRoute>
+          path="users"
+          element={
             <>
               <AdminTopNav />
-            <AdminUsers />
+              <AdminUsers />
             </>
-          // </AdminRoute>
+          }
+        />
+        <Route
+          path="sellers"
+          element={
+            <>
+              <AdminTopNav />
+              <AdminSellers />
+            </>
+          }
+        />
+        <Route
+          path="sellers/:id"
+          element={
+            <>
+              <AdminTopNav />
+              <AdminSellerDetails />
+            </>
+          }
+        />
+              <Route
+        path="products"
+        element={
+    
+            <>
+              <AdminTopNav />
+              <AdminProducts />
+            </>
+
+        }
+      />
+              <Route
+        path="orders"
+        element={
+    
+            <>
+              <AdminTopNav />
+              <AdminOrders />
+            </>
+
+        }
+      />
+              <Route
+        path="payments"
+        element={
+    
+            <>
+              <AdminTopNav />
+              <AdminPayments />
+            </>
+
+        }
+      />
+              <Route
+        path="revenue"
+        element={
+    
+            <>
+              <AdminTopNav />
+              <AdminRevenue />
+            </>
+
         }
       />
       </Route>
