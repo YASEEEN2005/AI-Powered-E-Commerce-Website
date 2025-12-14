@@ -160,7 +160,7 @@ function NewArrivals({ openLoginModal }) {
     navigate(`/product/${id}`);
   };
 
-  const visibleProducts = products.slice(8, 16);
+  const visibleProducts = products.slice(0, 8);
 
   return (
     <section className="w-full bg-white py-10">

@@ -15,7 +15,7 @@ function BestSelling() {
       try {
         const res = await axios.get(`${api}/api/products`);
         const data = res.data?.data || [];
-        setProducts(data.slice(0, 8));
+        setProducts(data.slice(130, 145));
       } catch (err) {
         console.log(err);
       }

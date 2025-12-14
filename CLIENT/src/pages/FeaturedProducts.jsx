@@ -158,7 +158,7 @@ function FeaturedProducts({ openLoginModal }) {
     navigate(`/product/${id}`);
   };
 
-  const visibleProducts = products.slice(0, 8);
+  const visibleProducts = products.slice(90, 98);
 
   return (
     <section className="w-full bg-white py-10">

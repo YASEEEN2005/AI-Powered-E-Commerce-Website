@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Modal from "../componets/Modal"; // adjust path if needed
+import Modal from "../componets/Modal";
 
 const api = import.meta.env.VITE_BACKEND_API;
 
@@ -97,8 +97,7 @@ function StyleCollections() {
     <>
       <section className="w-full bg-white py-10">
         <div className="mx-auto max-w-[1400px] px-6 grid gap-6 lg:grid-cols-2">
-          {/* Mobiles banner */}
-          <div className="flex items-center justify-between rounded-3xl bg-[#e0f0ff] px-8 py-10">
+          <div className="flex items-center justify-between rounded-3xl bg-[#cfcfd2] px-8 py-10">
             <div className="max-w-xs space-y-3">
               <p className="text-xs font-medium tracking-[0.25em] text-slate-700 uppercase">
                 Mobile Collection
@@ -119,7 +118,7 @@ function StyleCollections() {
 
             <div className="hidden md:block">
               <img
-                src="https://pngimg.com/d/smartphone_PNG8513.png"
+                src="/images/Gemini_Generated_Image_of4gm1of4gm1of4g-removebg-preview.png"
                 alt="Latest Smartphones"
                 className="h-64 w-auto object-contain drop-shadow-xl"
               />
@@ -127,7 +126,7 @@ function StyleCollections() {
           </div>
 
           {/* Home Appliances banner */}
-          <div className="flex items-center justify-between rounded-3xl bg-[#e8f7eb] px-8 py-10">
+          <div className="flex items-center justify-between rounded-3xl bg-[#eef0f2] px-8 py-10">
             <div className="max-w-xs space-y-3">
               <p className="text-xs font-medium tracking-[0.25em] text-slate-700 uppercase">
                 Home Appliances
@@ -148,7 +147,7 @@ function StyleCollections() {
 
             <div className="hidden md:block">
               <img
-                src="https://pngimg.com/d/washing_machine_PNG15570.png"
+                src="/images/Gemini_Generated_Image_4ndxg14ndxg14ndx-removebg-preview.png"
                 alt="Home Appliances"
                 className="h-64 w-auto object-contain drop-shadow-xl"
               />

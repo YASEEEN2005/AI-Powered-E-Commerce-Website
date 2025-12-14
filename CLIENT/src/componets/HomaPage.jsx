@@ -16,9 +16,9 @@ function HomaPage() {
       <HeroBanner />
       <FeatureSection></FeatureSection>
       <BestSelling />
-      <FeaturedProducts />
-      <StyleCollections />
       <NewArrivals />
+      <StyleCollections />
+      <FeaturedProducts />
       <Testimonials />
       <Footer />
     </div>
