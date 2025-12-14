@@ -313,7 +313,6 @@ function AdminProducts() {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-slate-50">
       <div className="max-w-[1300px] mx-auto px-4 md:px-6 py-5 md:py-6">
-        {/* Header like dashboard */}
         <div className="mb-4 md:mb-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
@@ -348,7 +347,6 @@ function AdminProducts() {
           </div>
         </div>
 
-        {/* Stat cards like dashboard */}
         <div className="mb-4 md:mb-5 grid gap-3 md:gap-4 md:grid-cols-3">
           <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-slate-50 rounded-2xl p-4 shadow-lg shadow-slate-900/20 border border-slate-700/70 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
@@ -401,7 +399,6 @@ function AdminProducts() {
           </div>
         </div>
 
-        {/* Filters row */}
         <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
           <div className="flex flex-col gap-1">
             <span className="text-[11px] text-slate-500 flex items-center gap-1">
@@ -468,7 +465,6 @@ function AdminProducts() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <p className="text-sm font-medium text-slate-900">
@@ -587,7 +583,6 @@ function AdminProducts() {
         </div>
       </div>
 
-      {/* Product modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={closeProductModal}

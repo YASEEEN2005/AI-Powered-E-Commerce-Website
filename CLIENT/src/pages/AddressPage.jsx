@@ -150,7 +150,6 @@ function AddressPage() {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-slate-50">
       <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-        {/* Header */}
         <div className="flex items-center justify-between mb-6 md:mb-8">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500">
@@ -182,9 +181,7 @@ function AddressPage() {
           </div>
         )}
 
-        {/* Layout */}
         <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-7">
-          {/* Saved addresses */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-5">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -274,7 +271,6 @@ function AddressPage() {
             )}
           </div>
 
-          {/* Form */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-5">
             <div className="flex items-center justify-between mb-3">
               <div>

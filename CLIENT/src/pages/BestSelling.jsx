@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { forwardRef } from "react";
 
 const api = import.meta.env.VITE_BACKEND_API;
 
-function BestSelling() {
+const BestSelling = forwardRef((props, ref) => {
   const [products, setProducts] = useState([]);
   const sliderRef = useRef(null);
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function BestSelling() {
   };
 
   return (
+     <section ref={ref}>
     <section className="w-full bg-white py-10 ">
       <div className="max-w-[1300px] mx-auto px-12 relative border border-slate-200 shadow-lg rounded-xl py-4">
         <h2 className="text-xl font-semibold mb-6">Best Selling</h2>
@@ -94,7 +96,8 @@ function BestSelling() {
         </div>
       </div>
     </section>
+    </section>
   );
-}
+});
 
 export default BestSelling;

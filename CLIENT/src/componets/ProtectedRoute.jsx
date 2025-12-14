@@ -15,7 +15,11 @@ function ProtectedRoute({ children }) {
   }
 
   if (!isAuthenticated) {
-    toast.info("Please login to continue");
+    if (!toast.isActive("auth-warning")) {
+      toast.info("Please login to continue", {
+        toastId: "auth-warning",
+      });
+    }
     return <Navigate to="/" replace />;
   }
 

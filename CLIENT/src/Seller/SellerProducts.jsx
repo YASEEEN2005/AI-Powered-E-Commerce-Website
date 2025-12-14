@@ -210,12 +210,11 @@ const uploadImagesToCloudinary = async (files) => {
       images,
     };
 
+console.log(payload);
 
     try {
       setSaving(true);
 
-      // Your controller expects createProduct with product_id + seller_id + fields.
-      // Make sure backend assigns product_id automatically in your model. :contentReference[oaicite:1]{index=1}
       const res = await axios.post(`${api}/api/products`, payload, {
         headers: { Authorization: `Bearer ${sellerToken}` },
       });

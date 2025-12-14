@@ -16,7 +16,16 @@ const recommendationRoutes =require("./Routers/recommendationRoutes")
 const contactRoutes = require("./Routers/contactRoutes")
 const sellerTicketRoutes = require("./Routers/sellerTicketRoutes")
 const cors = require("cors");
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "*",
+      "https://ai-powered-e-commerce-website.vercel.app"
+    ],
+    credentials: true
+  })
+);
+// app.use(cors());
 require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;

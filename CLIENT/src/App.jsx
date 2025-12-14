@@ -25,6 +25,7 @@ import SellerRouters from "./Routers/SellerRouters";
 import ProtectedRoute from "./componets/ProtectedRoute";
 import AdminRouters from "./Routers/AdminRouters";
 import PersonalizedRecommendations from "./pages/PersonalizedRecommendations";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function AppInner() {
   const location = useLocation();
@@ -36,105 +37,37 @@ function AppInner() {
     <>
       {!isSellerRoute && !isAdminRoute && <Navbar />}
 
-      <Routes>
-        {/* Admin routes */}
-        <Route path="/admin/*" element={<AdminRouters />} />
+    <Routes>
+  {/* Admin routes */}
+  <Route path="/admin/*" element={<AdminRouters />} />
 
-        {/* Seller-side */}
-        <Route path="/seller/*" element={<SellerRouters />} />
+  {/* Seller routes */}
+  <Route path="/seller/*" element={<SellerRouters />} />
 
-        {/* Public routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<OtpLogin />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/product/:product_id" element={<ProductDetailsPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/faq" element={<FAQPage />} />
-        <Route path="/policy" element={<TermsPolicyPage />} />
+  {/* Public routes */}
+  <Route path="/" element={<HomePage />} />
+  <Route path="/login" element={<OtpLogin />} />
+  <Route path="/products" element={<ProductsPage />} />
+  <Route path="/product/:product_id" element={<ProductDetailsPage />} />
+  <Route path="/contact" element={<ContactPage />} />
+  <Route path="/about" element={<AboutPage />} />
+  <Route path="/faq" element={<FAQPage />} />
+  <Route path="/policy" element={<TermsPolicyPage />} />
 
-        {/* Protected User Routes */}
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <CartPage />
-            </ProtectedRoute>
-          }
-        />
+  {/* Protected user routes */}
+  <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+  <Route path="/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+  <Route path="/account" element={<ProtectedRoute><AccountPage /></ProtectedRoute>} />
+  <Route path="/order-summary" element={<ProtectedRoute><OrderSummaryPage /></ProtectedRoute>} />
+  <Route path="/address" element={<ProtectedRoute><AddressPage /></ProtectedRoute>} />
+  <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
+  <Route path="/account/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
+  <Route path="/account/orders/:orderId" element={<ProtectedRoute><OrderDetailsPage /></ProtectedRoute>} />
+  <Route path="/recommended" element={<ProtectedRoute><PersonalizedRecommendations /></ProtectedRoute>} />
 
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedRoute>
-              <WishlistPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/account"
-          element={
-            <ProtectedRoute>
-              <AccountPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/order-summary"
-          element={
-            <ProtectedRoute>
-              <OrderSummaryPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/address"
-          element={
-            <ProtectedRoute>
-              <AddressPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/payment"
-          element={
-            <ProtectedRoute>
-              <PaymentPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/account/orders"
-          element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/account/orders/:orderId"
-          element={
-            <ProtectedRoute>
-              <OrderDetailsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="recommended"
-          element={
-            <ProtectedRoute>
-              <PersonalizedRecommendations />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-
+  {/* 404 route — ALWAYS LAST */}
+  <Route path="*" element={<NotFoundPage />} />
+</Routes>
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
     </>
   );

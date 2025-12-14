@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema(
 productSchema.plugin(AutoIncrement, {
   id: "product_id_counter",
   inc_field: "product_id",
-  start_seq: 1,
+  start_seq: 1000,
 });
 
 module.exports = mongoose.model("Product", productSchema);

@@ -1,5 +1,4 @@
-import React from "react";
-import Navbar from "../pages/navBar";
+import React, { useEffect, useRef } from "react";
 import HeroBanner from "../pages/HeroBanner";
 import FeatureSection from "../pages/FeatureSection";
 import FeaturedProducts from "../pages/FeaturedProducts";
@@ -9,14 +8,32 @@ import Testimonials from "../pages/Testimonials";
 import Footer from "../pages/Footer";
 import BestSelling from "../pages/BestSelling";
 
-
 function HomaPage() {
+  const bestSellingRef = useRef(null);
+  const newArrivalsRef = useRef(null);
+
+  useEffect(() => {
+    const target = sessionStorage.getItem("scrollTo");
+
+    if (target === "best-selling") {
+      bestSellingRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    if (target === "new-arrivals") {
+      newArrivalsRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    sessionStorage.removeItem("scrollTo");
+  }, []);
+
   return (
     <div>
       <HeroBanner />
-      <FeatureSection></FeatureSection>
-      <BestSelling />
-      <NewArrivals />
+      <FeatureSection />
+
+      <BestSelling ref={bestSellingRef} />
+      <NewArrivals ref={newArrivalsRef} />
+
       <StyleCollections />
       <FeaturedProducts />
       <Testimonials />

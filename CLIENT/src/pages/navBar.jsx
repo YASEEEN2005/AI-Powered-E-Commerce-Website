@@ -93,16 +93,23 @@ function Navbar() {
                   All Products
                 </Link>
                 <Link
-                  to="/new-arrivals"
-                  className="block px-4 py-2.5 text-sm hover:bg-slate-50"
-                >
-                  New Arrivals
-                </Link>
-                <Link
-                  to="/best-sellers"
+                  to="/"
+                  onClick={() =>
+                    sessionStorage.setItem("scrollTo", "best-selling")
+                  }
                   className="block px-4 py-2.5 text-sm hover:bg-slate-50"
                 >
                   Best Sellers
+                </Link>
+
+                <Link
+                  to="/"
+                  onClick={() =>
+                    sessionStorage.setItem("scrollTo", "new-arrivals")
+                  }
+                  className="block px-4 py-2.5 text-sm hover:bg-slate-50"
+                >
+                  New Arrivals
                 </Link>
               </div>
             </div>
