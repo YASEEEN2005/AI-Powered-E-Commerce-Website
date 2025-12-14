@@ -12,6 +12,7 @@ const sellerRoutes = require("./Routers/sellerRoutes");
 const userAuthRoutes = require("./Routers/userAuthRoutes");
 const addressRouters = require("./Routers/addressRoutes");
 const uploadRoutes = require("./Routers/uploadRoutes");
+const recommendationRoutes =require("./Routers/recommendationRoutes")
 const cors = require("cors");
 app.use(cors());
 require("dotenv").config();
@@ -35,6 +36,8 @@ app.use("/api", sellerRoutes);
 app.use("/api", userAuthRoutes);
 app.use("/api", addressRouters);
 app.use("/api", uploadRoutes);
+app.use("/api", recommendationRoutes);
+
 
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);

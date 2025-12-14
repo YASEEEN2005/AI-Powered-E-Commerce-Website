@@ -23,7 +23,8 @@ import OrderDetailsPage from "./pages/OrderDetailsPage";
 import SellerRouters from "./Routers/SellerRouters";
 
 import ProtectedRoute from "./componets/ProtectedRoute";
-import AdminRouters from "./Routers/AdminRouters"; // ⬅️ import this
+import AdminRouters from "./Routers/AdminRouters";
+import PersonalizedRecommendations from "./pages/PersonalizedRecommendations";
 
 function AppInner() {
   const location = useLocation();
@@ -121,6 +122,14 @@ function AppInner() {
           element={
             <ProtectedRoute>
               <OrderDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="recommended"
+          element={
+            <ProtectedRoute>
+              <PersonalizedRecommendations />
             </ProtectedRoute>
           }
         />

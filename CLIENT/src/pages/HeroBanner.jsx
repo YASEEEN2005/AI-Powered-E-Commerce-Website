@@ -8,9 +8,9 @@ const banners = [
     title: "Made For You",
     subtitle: "AI-powered styles you’ll actually love.",
     cta: "View Recommendations",
-    bg: "bg-[#c8ded5]",
+    bg: "bg-[#cfe3c6]",
     image:
-      "https://images.pexels.com/photos/7671166/pexels-photo-7671166.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "https://res.cloudinary.com/dhyc9fhag/image/upload/v1765696598/Gemini_Generated_Image_7tpkix7tpkix7tpk_tlbrld.png",
   },
   {
     id: 2,
@@ -18,9 +18,9 @@ const banners = [
     title: "Flat 50% Off",
     subtitle: "Handpicked deals curated by our AI engine.",
     cta: "Shop Deals",
-    bg: "bg-[#f6d9c5]",
+    bg: "bg-[#f5c88b]",
     image:
-      "https://images.pexels.com/photos/9945171/pexels-photo-9945171.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "https://res.cloudinary.com/dhyc9fhag/image/upload/v1765696715/Gemini_Generated_Image_nsd9l1nsd9l1nsd9_v4usyn.png",
   },
   {
     id: 3,
@@ -28,9 +28,9 @@ const banners = [
     title: "Back Friday Fever",
     subtitle: "Exclusive midnight drops, dynamic AI pricing.",
     cta: "Explore Offers",
-    bg: "bg-[#d6d7ff]",
+    bg: "bg-[#cfd7ee]",
     image:
-      "https://images.pexels.com/photos/7671168/pexels-photo-7671168.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "https://res.cloudinary.com/dhyc9fhag/image/upload/v1765696842/Gemini_Generated_Image_4k9kwt4k9kwt4k9k_fab6uw.png",
   },
   {
     id: 4,
@@ -38,9 +38,9 @@ const banners = [
     title: "New Arrivals",
     subtitle: "Fresh drops tailored to your vibe.",
     cta: "Browse Collection",
-    bg: "bg-[#e1e9ff]",
+    bg: "bg-[#dbe9f6]",
     image:
-      "https://images.pexels.com/photos/4464821/pexels-photo-4464821.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "https://res.cloudinary.com/dhyc9fhag/image/upload/v1765697447/Gemini_Generated_Image_gfin56gfin56gfin_ouqpx5.png",
   },
 ];
 
