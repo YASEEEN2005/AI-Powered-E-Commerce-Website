@@ -19,7 +19,7 @@ const cors = require("cors");
 app.use(
   cors({
     origin: [
-      "*",
+      "https://ai-powered-e-commerce-website-sable.vercel.app",
       "https://ai-powered-e-commerce-website.vercel.app"
     ],
     credentials: true
