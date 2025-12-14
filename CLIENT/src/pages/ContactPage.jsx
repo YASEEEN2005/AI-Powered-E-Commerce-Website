@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Send,
+  MessageCircle,
+} from "lucide-react";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+const api = import.meta.env.VITE_BACKEND_API;
 
 function ContactPage() {
   const [form, setForm] = useState({
@@ -10,6 +20,7 @@ function ContactPage() {
     subject: "",
     message: "",
   });
+
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -27,8 +38,11 @@ function ContactPage() {
 
     try {
       setSubmitting(true);
-      await new Promise((res) => setTimeout(res, 800));
-      toast.success("Thank you, we will get back to you soon.");
+
+      await axios.post(`${api}/api/contact`, form);
+
+      toast.success("Thank you! Our support team will contact you soon.");
+
       setForm({
         name: "",
         email: "",
@@ -36,8 +50,11 @@ function ContactPage() {
         subject: "",
         message: "",
       });
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -54,7 +71,8 @@ function ContactPage() {
             We are here to help you
           </h1>
           <p className="text-sm text-slate-600 max-w-xl mx-auto">
-            Questions about orders, payments, or products? Send us a message and our team will get back to you within 24 hours.
+            Questions about orders, payments, or products? Send us a message and
+            our team will get back to you within 24 hours.
           </p>
         </div>
 
@@ -86,9 +104,10 @@ function ContactPage() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Enter your name"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5"
                   />
                 </div>
+
                 <div className="space-y-1">
                   <label className="text-xs font-medium text-slate-700">
                     Email
@@ -99,7 +118,7 @@ function ContactPage() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5"
                   />
                 </div>
               </div>
@@ -115,9 +134,10 @@ function ContactPage() {
                     value={form.phone}
                     onChange={handleChange}
                     placeholder="Your phone number"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5"
                   />
                 </div>
+
                 <div className="space-y-1">
                   <label className="text-xs font-medium text-slate-700">
                     Subject
@@ -128,7 +148,7 @@ function ContactPage() {
                     value={form.subject}
                     onChange={handleChange}
                     placeholder="Order issue, payment, feedback..."
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5"
                   />
                 </div>
               </div>
@@ -139,23 +159,24 @@ function ContactPage() {
                 </label>
                 <textarea
                   name="message"
+                  rows={4}
                   value={form.message}
                   onChange={handleChange}
-                  rows={4}
                   placeholder="Write your message here..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none resize-none focus:bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs resize-none outline-none focus:bg-white focus:ring-2 focus:ring-slate-900/5"
                 />
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                 <p className="text-[11px] text-slate-500 max-w-xs">
-                  By submitting this form, you agree to be contacted by our support team using the details provided above.
+                  By submitting this form, you agree to be contacted by our
+                  support team.
                 </p>
 
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-black text-white px-5 py-2 text-xs font-semibold shadow-sm hover:bg-slate-900 disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-black text-white px-5 py-2 text-xs font-semibold hover:bg-slate-900 disabled:opacity-60"
                 >
                   {submitting ? (
                     <>
@@ -178,90 +199,27 @@ function ContactPage() {
               <h2 className="text-sm font-semibold text-slate-900 mb-3">
                 Contact information
               </h2>
+
               <div className="space-y-3 text-xs">
-                <div className="flex gap-3">
-                  <div className="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center">
-                    <Phone className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Customer Support</p>
-                    <p className="font-medium text-slate-900">
-                      +91 98765 43210
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center">
-                    <Mail className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Email</p>
-                    <p className="font-medium text-slate-900">
-                      support@swiftcart.in
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center">
-                    <MapPin className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Office</p>
-                    <p className="font-medium text-slate-900">
-                      SwiftCart HQ, Kochi, Kerala, India
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center">
-                    <Clock className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Support hours</p>
-                    <p className="font-medium text-slate-900">
-                      Mon – Sat, 9:00 AM – 7:00 PM
-                    </p>
-                  </div>
-                </div>
+                <Info icon={Phone} title="Customer Support" value="+91 98765 43210" />
+                <Info icon={Mail} title="Email" value="support@swiftcart.in" />
+                <Info
+                  icon={MapPin}
+                  title="Office"
+                  value="SwiftCart HQ, Kochi, Kerala"
+                />
+                <Info
+                  icon={Clock}
+                  title="Support hours"
+                  value="Mon – Sat, 9:00 AM – 7:00 PM"
+                />
               </div>
             </div>
 
-            <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4">
-              <h2 className="text-sm font-semibold text-slate-900 mb-2">
-                Order and payment help
-              </h2>
-              <p className="text-xs text-slate-600 mb-3">
-                For issues related to existing orders, delayed delivery, payment failures, or refunds, please mention your order ID in the message.
-              </p>
-              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div className="rounded-xl bg-slate-50 px-3 py-2">
-                  <p className="font-semibold text-slate-900">Orders</p>
-                  <p className="text-slate-600">Track and manage your orders</p>
-                </div>
-                <div className="rounded-xl bg-slate-50 px-3 py-2">
-                  <p className="font-semibold text-slate-900">Payments</p>
-                  <p className="text-slate-600">Refunds and payment support</p>
-                </div>
-                <div className="rounded-xl bg-slate-50 px-3 py-2">
-                  <p className="font-semibold text-slate-900">Returns</p>
-                  <p className="text-slate-600">Return and replacement policy</p>
-                </div>
-                <div className="rounded-xl bg-slate-50 px-3 py-2">
-                  <p className="font-semibold text-slate-900">Partnerships</p>
-                  <p className="text-slate-600">Sell with SwiftCart</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl bg-slate-900 text-white p-4 sm:p-5">
-              <h2 className="text-sm font-semibold mb-1">
-                Need quick help?
-              </h2>
+            <div className="rounded-2xl bg-slate-900 text-white p-5">
+              <h2 className="text-sm font-semibold mb-1">Need quick help?</h2>
               <p className="text-[11px] text-slate-200 mb-3">
-                Check our FAQ and support articles for instant answers to common questions.
+                Check our FAQ and support articles for instant answers.
               </p>
               <a
                 href="/faq"
@@ -272,6 +230,20 @@ function ContactPage() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function Info({ icon: Icon, title, value }) {
+  return (
+    <div className="flex gap-3">
+      <div className="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center">
+        <Icon className="h-4 w-4 text-white" />
+      </div>
+      <div>
+        <p className="text-slate-500">{title}</p>
+        <p className="font-medium text-slate-900">{value}</p>
       </div>
     </div>
   );

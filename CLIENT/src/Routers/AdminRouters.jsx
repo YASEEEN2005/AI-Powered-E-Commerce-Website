@@ -12,6 +12,7 @@ import AdminProducts from "../Admin/AdminProducts";
 import AdminOrders from "../Admin/AdminOrders";
 import AdminPayments from "../Admin/AdminPayments";
 import AdminRevenue from "../Admin/AdminRevenue";
+import AdminMessages from "../Admin/AdminMessages";
 
 function AdminRouters() {
   return (
@@ -95,6 +96,17 @@ function AdminRouters() {
             <>
               <AdminTopNav />
               <AdminRevenue />
+            </>
+
+        }
+      />
+              <Route
+        path="messages"
+        element={
+    
+            <>
+              <AdminTopNav />
+              <AdminMessages />
             </>
 
         }

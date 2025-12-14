@@ -13,6 +13,8 @@ const userAuthRoutes = require("./Routers/userAuthRoutes");
 const addressRouters = require("./Routers/addressRoutes");
 const uploadRoutes = require("./Routers/uploadRoutes");
 const recommendationRoutes =require("./Routers/recommendationRoutes")
+const contactRoutes = require("./Routers/contactRoutes")
+const sellerTicketRoutes = require("./Routers/sellerTicketRoutes")
 const cors = require("cors");
 app.use(cors());
 require("dotenv").config();
@@ -37,6 +39,10 @@ app.use("/api", userAuthRoutes);
 app.use("/api", addressRouters);
 app.use("/api", uploadRoutes);
 app.use("/api", recommendationRoutes);
+app.use("/api", contactRoutes);
+app.use("/api", sellerTicketRoutes);
+
+
 
 
 app.listen(PORT, () => {

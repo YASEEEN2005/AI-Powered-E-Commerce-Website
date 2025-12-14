@@ -1,7 +1,6 @@
-// src/Admin/AdminTopNav.jsx
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LogOut, Menu, Plus } from "lucide-react";
+import { LogOut, Menu, Plus, Mail } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Modal from "../componets/Modal";
@@ -50,26 +49,24 @@ function AdminTopNav() {
       return;
     }
 
-    try{
+    try {
       setIsSubmitting(true);
 
-      const res = await axios.post(`${api}/api/admin/login`, {
+      await axios.post(`${api}/api/admin/login`, {
         email: addEmail,
         password: addPassword,
       });
 
-      const data = res.data;
       toast.success("Admin added successfully");
-
       setIsAddOpen(false);
       setAddEmail("");
       setAddPassword("");
     } catch (err) {
-      const msg =
+      toast.error(
         err.response?.data?.message ||
-        err.response?.data?.error ||
-        "Failed to add admin";
-      toast.error(msg);
+          err.response?.data?.error ||
+          "Failed to add admin"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -108,6 +105,13 @@ function AdminTopNav() {
           </nav>
 
           <div className="flex items-center gap-3 md:gap-4">
+            <NavLink
+              to="/admin/messages"
+              className="relative h-9 w-9 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-700 hover:bg-slate-900 hover:text-white transition"
+            >
+              <Mail size={16} />
+            </NavLink>
+
             <div className="hidden sm:flex flex-col items-end">
               <p className="text-xs text-slate-700">
                 {adminInfo?.email || "admin@swiftcart.com"}
